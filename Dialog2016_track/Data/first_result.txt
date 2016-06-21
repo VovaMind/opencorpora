@@ -1,0 +1,13 @@
+                 
+correct             Location   Location+Person   LocOrg   LocOrg+Org    NONE     Org   Org+Location   Org+Person   Person
+  Location               320                 0        0            0       0       0              1            0        0
+  Location+Person          1                 4        0            0       0       0              0            0        0
+  LocOrg                   0                 0      272            0       0       0              0            0        0
+  LocOrg+Location          0                 0        0            0       0       0              0            0        0
+  LocOrg+Org               0                 0        0           46       0       5              2            0        0
+  NONE                     5                 0        0            0   14841       2              0            0        4
+  Org                      0                 0        0            6       8     696              0            0        0
+  Org+Location             3                 0        0            1       0       5              4            0        0
+  Org+Person               0                 0        0            0       0       0              2            2        0
+  Person                   0                 0        0            0       1       0              0            0      723
+  Project                  0                 0        0            0       2       0              0            0        0
