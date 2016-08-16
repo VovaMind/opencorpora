@@ -24,6 +24,7 @@ class MarkupCorpus:
 		# tokens-файл и txt-файл (всего 6 штук)
 		cnt = collections.Counter(doc_names)
 		self.document_list = list(filter(lambda x: cnt[x] == 6, cnt))
+		self.document_list.sort()
 	
 	# TODO: схема с doc_index выглядит велосипедно немного, 
 	# подумать как улучшить

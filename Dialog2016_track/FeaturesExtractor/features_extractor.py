@@ -41,7 +41,7 @@ class FeaturesExtractor(object):
 		# run mystem
 		args = os.path.join(bin_path, "mystem.exe")
 		args += (
-			" -ni --format json " + os.path.join(bin_path, "input.txt") + " " 
+			" -nid --format json " + os.path.join(bin_path, "input.txt") + " " 
 			+ os.path.join(bin_path, "output.txt")
 		)
 		subprocess.call(args, shell=False)
