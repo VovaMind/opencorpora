@@ -7,6 +7,7 @@ import string_set
 import subprocess
 import sys
 from gensim.models import word2vec
+from itertools import chain
 from markup_corpus import MarkupCorpus
 from pandas import DataFrame, options
 from participant_sets import ParticipantSets
@@ -75,13 +76,21 @@ class FeaturesExtractor(object):
 		os.remove(os.path.join(bin_path, "input.txt"))
 		os.remove(os.path.join(bin_path, "output.txt"))
 		return result
+	@staticmethod
+	def get_capitalization(token_text):
+		if len(token_text) == 0:
+			return 'empty'
+		elif token_text[0].isupper():
+			return 'Capital'
+		else:
+			return 'lower'
 	def create_init_data_frame(self, doc_tokens, participant_outputs):
 		'''Создаем и инициализируем DataFrame. 
 		Строки - токены, столбцы - признаки
 		'''
 		init_data = {
 			'token_id' : [], 'token_text' : [], 'token_objects' : [], 'token_type' : [],
-			'token_span_types' : [], 'mystem_info' : []
+			'token_span_types' : [], 'mystem_info' : [], 'capitalization' : []
 		}
 		for i in range(WORD2VEC_FEATURES_COUNT):
 			init_data['word2vec_feature_' + str(i)] = []
@@ -96,6 +105,7 @@ class FeaturesExtractor(object):
 			init_data['token_objects'].append(token.obj_types.get_all())
 			init_data['token_type'].append(token.type)
 			init_data['token_span_types'].append(token.span_types.get_all())
+			init_data['capitalization'].append(FeaturesExtractor.get_capitalization(token.text))
 			try:
 				init_data['mystem_info'].append(mystem_result[token.text][1])
 			except:
@@ -113,8 +123,32 @@ class FeaturesExtractor(object):
 					string_set.StringSet())
 		return init_data
 	@staticmethod
+	def shift(l, n):
+		'''http://stackoverflow.com/questions/2150108/efficient-way-to-shift-a-list-in-python'''
+		return l[n:] + l[:n]
+	@staticmethod
 	def prepare_for_output(result_data):
-		'''Заменяем объекты StringSet на строковые представления.'''
+		'''Заменяем объекты StringSet на строковые представления.
+		Перед заменой добавляем контекст для токенов.
+		'''
+		# Добавляем контекстные признаки без w2v'ка. 
+		context_range = 2
+		data_with_context = {}
+		for i in chain(range(-context_range, 0), range(1, context_range + 1)):
+			if i < 0:
+				context_col_prefix = "prev_" + str(-i) + "_"
+			else:
+				context_col_prefix = "next_" + str(i) + "_"
+			for col_name in filter(lambda x: x.find("word2vec_feature_") == -1, 
+			result_data):
+				# Убираем из контекста правильные объекты
+				if col_name in {"token_objects", "token_id", "token_text", "token_span_types"}:
+					continue
+				data_with_context[context_col_prefix + col_name] = result_data[col_name]
+				data_with_context[context_col_prefix + col_name] = FeaturesExtractor.shift(
+					data_with_context[context_col_prefix + col_name], i)
+		result_data.update(data_with_context)
+		# Преобразуем в финальный вид.
 		data = DataFrame.from_dict(result_data)
 		for col_name in data.columns:
 			colomn_values = data[col_name]

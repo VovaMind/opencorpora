@@ -21,7 +21,7 @@ boost_result <- predict(boost_model, filteredData[data$is_test,])
 stats <- filteredData[data$is_test,]$token_objects == boost_result$class
 print(table(stats))
 
-data$found_objects <- rep("", n)
+data$found_objects <- filteredData$token_objects
 data[data$is_test,]$found_objects <- boost_result$class
 
 save(boost_model, file="objects_model.bin")
