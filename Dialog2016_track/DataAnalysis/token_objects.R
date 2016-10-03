@@ -8,8 +8,6 @@ data <- read.csv('MarkupData.csv')
 data <- data[,!(names(data) %in% c("token_text"))]
 
 drops <- c("token_id", "mystem_info", "token_span_types")
-word2vec_features_count <- 1000
-drops <- c(drops,paste("word2vec_feature_", as.character(0:word2vec_features_count), sep=""))
 filteredData <- data[ , !(names(data) %in% drops)]
 
 n = nrow(filteredData)
