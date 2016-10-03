@@ -174,11 +174,11 @@ class FeaturesExtractor(object):
 		if dot_pos != -1:
 			result = result[0:dot_pos]
 		return result + "_result"
-	def exract_markup_data_track1(self, markup_dir, participants_dir, output_file_name):
+	def exract_markup_data_track1(self, markup_dir, participants_dir, output_file_name, data_type):
 		'''Извлекаем данные для размеченного корпуса (дорожка 1).'''
 		# Загружаем результаты участников для размеченного корпуса
 		sets = ParticipantSets(participants_dir)
-		dev_sets = sets.getTypedSets("dev")
+		dev_sets = sets.getTypedSets(data_type)
 		# Загружаем объекты ParticipantOutput только один раз, 
 		# так как работа с файловой системой медленная
 		participant_outputs = []
