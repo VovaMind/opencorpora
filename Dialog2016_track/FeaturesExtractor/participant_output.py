@@ -23,7 +23,11 @@ class ParticipantOutput(object):
 				break
 			# Если внутри есть каталоги, то только один. 
 			# Иначе не знаем куда спускаться.
-			# TODO: тут есть исключения, нужно их внимательно смотреть
+			# В исходных данных странные исключения, фильтруем их.
+			if (len(list(dir_content)) > 1):
+				dir_content = list(filter(
+					lambda x: x.upper() not in {"__MACOSX", "VIOLET_0.TESTSET"}, 
+					dir_content))
 			assert len(dir_content) == 1
 			self.output_dir = os.path.join(self.output_dir, dir_content[0])
 	def get_output_file_name(self, file_name, track_id):

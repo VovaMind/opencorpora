@@ -3,6 +3,7 @@
 
 import features_extractor
 import time
+import sets_collection
 
 def extract_features():
 	'''Извлекаем признаки.'''
@@ -19,7 +20,10 @@ def extract_features():
 	participants_dir = r"C:\development\OpenCorpora\FactExtAutoAssesst\data\factrueval2016"
 	# Имя csv-файла, в который будет записан результат
 	output_file_name = r"C:\development\OpenCorpora\FactExtAutoAssesst\data\MarkupData.csv"
-	extractor.exract_markup_data_track1(markup_dir, participants_dir, output_file_name, "test")
+	output_collection = sets_collection.SetsCollection()
+	extractor.exract_markup_data_track1(markup_dir, participants_dir, output_file_name, "test",
+										output_collection)
+	output_collection.save(r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin")
 
 if __name__ == '__main__':
 	begin_time = time.time()

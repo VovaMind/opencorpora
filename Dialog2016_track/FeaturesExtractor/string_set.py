@@ -14,8 +14,20 @@ class StringSet(object):
 		'''
 		if (not self.objects):
 			return "NONE"
-		return functools.reduce(lambda x,y : x + "+" + y, self.objects)
+		return functools.reduce(lambda x,y : x + "+" + y, sorted(self.objects))
 	def add_string(self, obj):
 		'''Добавляем строку в набор.'''
 		assert isinstance(obj, str)
 		self.objects.add(obj)
+	def load_from_string(self, str):
+		if str == "NONE":
+			self.object = set()
+		else:
+			self.objects = set(str.split("+"))
+	def get_match(self, other):
+		'''Получаем число общих объектов для двух StringSet.'''
+		result = 0
+		for i in self.objects:
+			if i in other.objects:
+				result += 1
+		return result

@@ -9,7 +9,15 @@ class TypedParticipantSets(object):
 	'''
 	def __init__(self, input_dir, dir_names):
 		self.input_dir = input_dir
-		self.dir_names = dir_names
+		# У green_1 и grey_1 нет результатов на testset'е
+		# У Puprle_0 и 1 странный формат для полного корпуса.
+		self.dir_names = list(filter(lambda x: x not in {'green_1', 'grey_0', 'purple_0', 
+														'purple_0.test', 'purple_0.dev', 
+														'purple_1', 'purple_1.test', 
+														'purple_1.dev'},
+									dir_names))
+#		self.dir_names = list(filter(lambda x: x in {'aquamarine_0'}, 
+#									dir_names))
 	# TODO: подумать как извести велосипед с self.index'ом
 	def __iter__(self):
 		self.index = -1;
