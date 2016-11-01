@@ -43,6 +43,7 @@ class FullCorpus:
 	'''
 	
 	def __init__(self, input_dir):
+		self.documents_cache = {}
 		self.current_doc_pos = 0
 		self.input_dir = input_dir
 		
@@ -73,4 +74,10 @@ class FullCorpus:
 		self.current_doc_pos += сhunk_size
 		return result
 	def get_document_info(self, document_name):
-		return TokenizedDocument(self.input_dir, document_name)
+		# Хотим при нескольких обращениях к одному и тому же документу получать
+		# одинаковые номера токенов. Для этого используем кэш.
+		if (document_name not in self.documents_cache):
+			self.documents_cache[document_name] = TokenizedDocument(self.input_dir, document_name)
+		return self.documents_cache[document_name]
+	def clear_documents_cache(self):
+		self.documents_cache = {}

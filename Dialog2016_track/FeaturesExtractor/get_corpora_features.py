@@ -74,8 +74,9 @@ def extract_features():
 					token_doc_file.write(doc + "\n")
 		extractor.exract_data_track1(corpus, docs, participants_dir, output_file_names[0],
 									output_collection)
+		corpus.clear_documents_cache()
 		temp += 1
-		if temp == 5:
+		if temp == 3:
 			break
 
 if __name__ == '__main__':
