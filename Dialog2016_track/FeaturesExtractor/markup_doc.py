@@ -61,6 +61,13 @@ class SpanInfo(object):
 		self.text_length = text_length
 		self.token_pos = token_pos
 		self.token_length = token_length
+	def __init__(self, type, id, token_pos, token_length):
+		self.type = type
+		self.id = id
+		self.token_pos = token_pos
+		self.token_length = token_length
+		self.text_pos = -1
+		self.text_length = -1
 
 class ObjectInfo(object):
 	'''Информация о конкретном объекте из документа'''
@@ -71,7 +78,7 @@ class ObjectInfo(object):
 
 class MarkupDoc(object):
 	'''Размеченный документ'''
-	def __init__(self, doc_name, file_name):
+	def __init__(self, doc_name, file_name, tokens_only):
 		# Полный путь к документу. Например, 
 		# "D:\vova\boch_2016\factRuEval-2016-master\factRuEval-2016-master\devset\book_58".
 		self.doc_name = doc_name 
@@ -80,6 +87,8 @@ class MarkupDoc(object):
 		
 		# Извлекаем токены.
 		self.extract_tokens()
+		if tokens_only:
+			return 
 		
 		# Извлекаем спаны.
 		self.extract_spans()

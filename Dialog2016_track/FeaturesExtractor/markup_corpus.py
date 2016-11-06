@@ -37,6 +37,7 @@ class MarkupCorpus:
 			self.doc_index += 1
 			return markup_doc.MarkupDoc(
 				os.path.join(self.input_dir, self.document_list[self.doc_index]), 
-				self.document_list[self.doc_index])
+				self.document_list[self.doc_index],
+				False)
 		else:
 			raise StopIteration()
