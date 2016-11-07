@@ -61,6 +61,7 @@ class SpanInfo(object):
 		self.text_length = text_length
 		self.token_pos = token_pos
 		self.token_length = token_length
+		self.debug_text = ""
 	def __init__(self, type, id, token_pos, token_length):
 		self.type = type
 		self.id = id
@@ -68,6 +69,7 @@ class SpanInfo(object):
 		self.token_length = token_length
 		self.text_pos = -1
 		self.text_length = -1
+		self.debug_text = ""
 
 class ObjectInfo(object):
 	'''Информация о конкретном объекте из документа'''

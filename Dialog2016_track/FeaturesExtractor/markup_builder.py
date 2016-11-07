@@ -78,11 +78,9 @@ def get_object_span_ids(class_name, spans):
 	result = set()
 	class_span_types = {"Org": {"org_name", "org_descr", "geo_adj"},
 						"Person": {"surname", "name", "patronymic", "nickname"},
-						"LocOrg": {"surname", "name", "patronymic", "nickname", "loc_name", 
-								"loc_descr", "org_name", "org_descr", "geo_adj"},
-						"Location": {"surname", "name", "patronymic", "nickname", "loc_name", 
-									"loc_descr", "geo_adj"},
-						"Facility": {"facility_descr"},
+						"LocOrg": {"loc_name", "loc_descr", "org_name", "org_descr", "geo_adj"},
+						"Location": {"loc_name", "loc_descr", "geo_adj"},
+						"Facility": {"facility_descr", "facility_name"},
 						"Project": {"prj_descr", "prj_name"}}
 	for span in spans:
 		if span.type in class_span_types[class_name]:
@@ -133,9 +131,16 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 			all_spans.add(current_span)
 	all_spans = list(all_spans)
 	all_spans.sort(key = lambda x: x.id)
+	span_texts = {}
 	# Выводим спаны
 	with open(os.path.join(WORK_DIR_PATH, doc_name + ".spans"), "w") as span_file:
 		for span in all_spans:
+			debug_text = ""
+			for i in range(span.token_pos, span.token_pos + span.token_length):
+				if len(debug_text) > 0:
+					debug_text += " "
+				debug_text += document.tokens[i].text
+			span_texts[span.id] = debug_text
 			# Находим границы в тексте
 			text_start_pos = document.tokens[span.token_pos].pos
 			end_token_pos = span.token_pos + span.token_length - 1
@@ -147,14 +152,29 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 			span_file.write(str(span.token_pos) + " ")
 			span_file.write(str(span.token_length) + " ")
 			span_file.write(str(text_start_pos) + " ")
-			span_file.write(str(text_end_pos - text_start_pos) + "\n")
+			span_file.write(str(text_end_pos - text_start_pos) + "  # ")
+			try:
+				span_file.write(debug_text)
+			except:
+				# Иногда в тексте встречаются "плохие" символы
+				# Не выводим текст в этому случае
+				pass
+			span_file.write("\n")
 	# Выводим объекты
 	with open(os.path.join(WORK_DIR_PATH, doc_name + ".objects"), "w") as object_file:
 		for obj in doc_objects:
 			object_file.write(str(obj.id) + " ")
 			object_file.write(str(obj.type))
+			debug_text = ""
 			for id in obj.span_ids:
 				object_file.write(" " + str(id))
+				if len(debug_text) > 0:
+					debug_text += " "
+				debug_text += span_texts[id]
+			try:
+				object_file.write("  # " + debug_text)
+			except:
+				pass
 			object_file.write("\n")
 
 def build_chunk_markup(doc_to_tokens, token_to_output):

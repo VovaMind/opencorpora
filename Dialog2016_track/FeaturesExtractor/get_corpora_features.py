@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 ''' main-файл для извлечения признаков '''
 
+from shutil import copyfile
+
 import features_extractor
 import full_corpus
 import id_generator
@@ -15,6 +17,7 @@ output_dir = r"C:\development\OpenCorpora\FactExtAutoAssesst\data\!test_output"
 def init_dir():
 	if os.path.exists(output_dir):
 		shutil.rmtree(output_dir)
+		time.sleep(2)
 	if not os.path.exists(output_dir):
 		try:
 			os.mkdir(output_dir)
@@ -50,6 +53,10 @@ def extract_features():
 		# Save tokens and token->doc map.
 		is_first_doc = True
 		for doc in docs:
+			# Сохраняем для документа его исходный текст
+			source_doc_path = os.path.join(input_dir, doc + ".txt")
+			target_doc_path = os.path.join(output_dir, doc + ".txt")
+			copyfile(source_doc_path, target_doc_path)
 			try:
 				doc_tokens = list(corpus.get_document_info(doc).tokens.values())
 			except:
