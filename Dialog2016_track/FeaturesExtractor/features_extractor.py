@@ -92,7 +92,8 @@ class FeaturesExtractor(object):
 		Строки - токены, столбцы - признаки
 		'''
 		init_data = {
-			'token_id' : [], 'token_type' : [], 'mystem_info' : [], 'capitalization' : []
+			'token_id' : [], 'token_type' : [], 'mystem_info' : [], 'capitalization' : [],
+			'part_of_speech': []
 		}
 		if (is_markup_data):
 			init_data['token_text'] = []
@@ -115,9 +116,11 @@ class FeaturesExtractor(object):
 				init_data['token_span_types'].append(token.span_types.get_all())
 			try:
 				init_data['mystem_info'].append(mystem_result[token.text][1])
+				init_data['part_of_speech'].append(mystem_result[token.text][0].split("_")[-1])
 			except:
 				# TODO: дублирование константы убрать
 				init_data['mystem_info'].append("mystem:none")
+				init_data['part_of_speech'].append("UNKNOWN")
 			# Добавляем w2v признаки
 			w2v_features = self.extract_w2v_features(mystem_result, token.text, token.type)
 			assert len(w2v_features) == WORD2VEC_FEATURES_COUNT
