@@ -3,7 +3,7 @@ library(class)
 
 set.seed(281189)
 
-setwd('C:\\development\\OpenCorpora\\FactExtAutoAssesst\\data')
+
 data <- read.csv('found_objects.csv')
 
 drops <- c("token_id", "token_objects")
@@ -16,5 +16,5 @@ boost_model <- boosting(token_span_types~., data=filteredData[!data$is_test,], m
 boost_result <- predict(boost_model, filteredData[data$is_test,])
 stats <- filteredData[data$is_test,]$token_span_types == boost_result$class
 print(table(stats))
-
+print(table(filteredData[data$is_test,][!stats,]$token_span_types))
 save(boost_model, file="spans_model.bin")
