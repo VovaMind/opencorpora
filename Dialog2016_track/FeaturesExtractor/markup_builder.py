@@ -68,7 +68,8 @@ def extract_doc_spans(doc_token_ids, token_output):
 		new_span = markup_doc.SpanInfo(type = last_token_span, 
 									id = id_generator.IdGenerator.get(),
 									token_pos = token_ids[spans_start[last_token_span]],
-									token_length = len(token_ids) - spans_start[last_token_span])
+									token_length = len(token_ids) - spans_start[last_token_span],
+									text_pos = -1, text_length = -1)
 		for j in range(spans_start[last_token_span], len(token_ids)):
 			if token_ids[j] not in result:
 				result[token_ids[j]] = set()
