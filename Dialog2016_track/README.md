@@ -11,6 +11,7 @@
 Размеченный корпус: https://github.com/dialogue-evaluation/factRuEval-2016
 
 Текущий pipeline для получения разметки:
+
 1. Выбираем набор признаков. Делаем его в FeaturesExtractor/features_extractor.py. Или можно использовать текущий набор признаков.
 2. Построение моделей:
   1. Извлекаем признаки из рамеченного корпуса testset с помощью FeaturesExtractor/get_testset_features.py. (devset не подходит, так как участники его видели)
