@@ -41,7 +41,6 @@ def extract_features():
 	extractor.load_w2v_data(GET_CORPORA_FEATURES_PARAMS["w2v_model_file"])
 	output_collection = sets_collection.SetsCollection()
 	output_collection.load(GET_CORPORA_FEATURES_PARAMS["sets_dump_file"])
-	temp = 0
 	while True:
 		docs = corpus.get_documents_chunk()
 		if not docs:
@@ -81,9 +80,6 @@ def extract_features():
 									output_file_names[0],
 									output_collection)
 		corpus.clear_documents_cache()
-		temp += 1
-		if temp == 3:
-			break
 
 if __name__ == '__main__':
 	begin_time = time.time()
