@@ -1,7 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 
-import os
 from first_track_output import FirstTrackOutput
+
+import os
 
 class ParticipantOutput(object):
 	def __init__(self, output_dir, name):

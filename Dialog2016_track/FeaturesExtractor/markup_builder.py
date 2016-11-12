@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 ''' Механизм построения результирующей разметки. '''
 
+from common_config import MARKUP_BUILDER_PARAMS
+
 import id_generator
 import markup_doc
 import os
 import time
 
 OUTPUT_CHUNKS_COUNT = 3
-WORK_DIR_PATH = r'C:\development\OpenCorpora\FactExtAutoAssesst\data\!test_output'
 
 def read_token_docs_file(file_name):
 	result = {}
@@ -123,7 +124,7 @@ def extract_doc_objects(doc_token_ids, token_output, token_to_spans):
 	return result
 
 def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
-	document = markup_doc.MarkupDoc(os.path.join(WORK_DIR_PATH, doc_name), doc_name, True)
+	document = markup_doc.MarkupDoc(os.path.join(MARKUP_BUILDER_PARAMS["work_dir"], doc_name), doc_name, True)
 	token_ids = sorted(doc_token_ids)
 	all_spans = set()
 	for token_id in token_ids:
@@ -135,7 +136,7 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 	all_spans.sort(key = lambda x: x.id)
 	span_texts = {}
 	# Выводим спаны
-	with open(os.path.join(WORK_DIR_PATH, doc_name + ".spans"), "w") as span_file:
+	with open(os.path.join(MARKUP_BUILDER_PARAMS["work_dir"], doc_name + ".spans"), "w") as span_file:
 		for span in all_spans:
 			debug_text = ""
 			for i in range(span.token_pos, span.token_pos + span.token_length):
@@ -163,7 +164,7 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 				pass
 			span_file.write("\n")
 	# Выводим объекты
-	with open(os.path.join(WORK_DIR_PATH, doc_name + ".objects"), "w") as object_file:
+	with open(os.path.join(MARKUP_BUILDER_PARAMS["work_dir"], doc_name + ".objects"), "w") as object_file:
 		for obj in doc_objects:
 			object_file.write(str(obj.id) + " ")
 			object_file.write(str(obj.type))
@@ -190,12 +191,12 @@ def build_markup():
 	for chunk_id in range(OUTPUT_CHUNKS_COUNT):
 		# Читаем файл с парами id токена; имя документа и строим отображение:
 		# имя документа -> id токенов
-		token_to_doc_file_name = os.path.join(WORK_DIR_PATH, 
+		token_to_doc_file_name = os.path.join(MARKUP_BUILDER_PARAMS["work_dir"], 
 											"_token_docs_" + str(chunk_id) + ".txt")
 		doc_to_tokens = read_token_docs_file(token_to_doc_file_name)
 		# Файл с объектами/спанами для токенов. Строим отбражение:
 		# id токена -> TokenOutput
-		output_file_name = os.path.join(WORK_DIR_PATH, 
+		output_file_name = os.path.join(MARKUP_BUILDER_PARAMS["work_dir"], 
 										"_output_" + str(chunk_id) + ".csv")
 		token_to_output = read_output_file(output_file_name)
 		build_chunk_markup(doc_to_tokens, token_to_output)

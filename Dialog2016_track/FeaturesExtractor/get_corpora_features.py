@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 ''' main-файл для извлечения признаков '''
 
+from common_config import GET_CORPORA_FEATURES_PARAMS
 from shutil import copyfile
 
 import features_extractor
@@ -12,15 +13,14 @@ import shutil
 import time
 
 current_output_file_id = 0
-output_dir = r"C:\development\OpenCorpora\FactExtAutoAssesst\data\!test_output"
 
 def init_dir():
-	if os.path.exists(output_dir):
-		shutil.rmtree(output_dir)
+	if os.path.exists(GET_CORPORA_FEATURES_PARAMS["output_dir"]):
+		shutil.rmtree(GET_CORPORA_FEATURES_PARAMS["output_dir"])
 		time.sleep(2)
-	if not os.path.exists(output_dir):
+	if not os.path.exists(GET_CORPORA_FEATURES_PARAMS["output_dir"]):
 		try:
-			os.mkdir(output_dir)
+			os.mkdir(GET_CORPORA_FEATURES_PARAMS["output_dir"])
 		except:
 			# TODO: o_O
 			init_dir()
@@ -32,18 +32,15 @@ def get_output_file_names():
 		init_dir()
 	temp = current_output_file_id
 	current_output_file_id += 1
-	return (os.path.join(output_dir, "_features_" + str(temp) + ".csv"),
-			os.path.join(output_dir, "_token_docs_" + str(temp) + ".txt"))
+	return (os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], "_features_" + str(temp) + ".csv"),
+			os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], "_token_docs_" + str(temp) + ".txt"))
 
 def extract_features():
-	input_dir = r"C:\development\OpenCorpora\FactExtAutoAssesst\data\!bocharov\tokenizedset"
-	corpus = full_corpus.FullCorpus(input_dir)
-	participants_dir = r"C:\development\OpenCorpora\FactExtAutoAssesst\data\factrueval2016"
+	corpus = full_corpus.FullCorpus(GET_CORPORA_FEATURES_PARAMS["input_dir"])
 	extractor = features_extractor.FeaturesExtractor()
-	extractor.load_w2v_data(
-		r"C:\development\OpenCorpora\FactExtAutoAssesst\data\news_win20.model.bin")
+	extractor.load_w2v_data(GET_CORPORA_FEATURES_PARAMS["w2v_model_file"])
 	output_collection = sets_collection.SetsCollection()
-	output_collection.load(r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin")
+	output_collection.load(GET_CORPORA_FEATURES_PARAMS["sets_dump_file"])
 	temp = 0
 	while True:
 		docs = corpus.get_documents_chunk()
@@ -54,8 +51,8 @@ def extract_features():
 		is_first_doc = True
 		for doc in docs:
 			# Сохраняем для документа его исходный текст
-			source_doc_path = os.path.join(input_dir, doc + ".txt")
-			target_doc_path = os.path.join(output_dir, doc + ".txt")
+			source_doc_path = os.path.join(GET_CORPORA_FEATURES_PARAMS["input_dir"], doc + ".txt")
+			target_doc_path = os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], doc + ".txt")
 			copyfile(source_doc_path, target_doc_path)
 			try:
 				doc_tokens = list(corpus.get_document_info(doc).tokens.values())
@@ -63,7 +60,7 @@ def extract_features():
 				print("Bad document name: " + doc)
 				continue
 			doc_tokens.sort(key = lambda x: x.pos)
-			with open(os.path.join(output_dir, doc + ".tokens"), "w", 
+			with open(os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], doc + ".tokens"), "w", 
 					encoding="utf-8") as token_file:
 				for token  in doc_tokens:
 					token_file.write(str(token.id) + " ")
@@ -79,7 +76,9 @@ def extract_features():
 				for token  in doc_tokens:
 					token_doc_file.write(str(token.id) + " ")
 					token_doc_file.write(doc + "\n")
-		extractor.exract_data_track1(corpus, docs, participants_dir, output_file_names[0],
+		extractor.exract_data_track1(corpus, docs, 
+									GET_CORPORA_FEATURES_PARAMS["participants_dir"], 
+									output_file_names[0],
 									output_collection)
 		corpus.clear_documents_cache()
 		temp += 1

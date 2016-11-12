@@ -1,7 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 
-import os
 from participant_output import ParticipantOutput
+
+import os
 
 class TypedParticipantSets(object):
 	'''Типизированные наборы данных от участников соревнований.

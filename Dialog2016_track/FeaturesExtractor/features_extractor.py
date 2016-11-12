@@ -1,18 +1,18 @@
 ﻿# -*- coding: utf-8 -*-
 
-import bisect
-import json
-import os
-import string_set
-import subprocess
-import sys
+from common_config import BINARY_PATH, MYSTEM_FILE_NAME, WORD2VEC_FEATURES_COUNT
 from gensim.models import word2vec
 from itertools import chain
 from markup_corpus import MarkupCorpus
 from pandas import DataFrame, options
 from participant_sets import ParticipantSets
 
-WORD2VEC_FEATURES_COUNT = 1000
+import bisect
+import json
+import os
+import string_set
+import subprocess
+import sys
 
 class FeaturesExtractor(object):
 	def __init__(self):
@@ -38,20 +38,19 @@ class FeaturesExtractor(object):
 		'''Строим мапу текст токена -> 
 		(лексема + часть речи, mystem_info)
 		'''
-		bin_path = "..\\bin"
-		with open(os.path.join(bin_path, "input.txt"), "w", encoding='utf8') as input_file:
+		with open(os.path.join(BINARY_PATH, "input.txt"), "w", encoding='utf8') as input_file:
 			for token in doc_tokens:
 				input_file.write(token.text + "\n")
 		# run mystem
-		args = os.path.join(bin_path, "mystem.exe")
+		args = os.path.join(BINARY_PATH, MYSTEM_FILE_NAME)
 		args += (
-			" -nid --format json " + os.path.join(bin_path, "input.txt") + " " 
-			+ os.path.join(bin_path, "output.txt")
+			" -nid --format json " + os.path.join(BINARY_PATH, "input.txt") + " " 
+			+ os.path.join(BINARY_PATH, "output.txt")
 		)
 		subprocess.call(args, shell=False)
 		# read result
 		result = {}
-		with open(os.path.join(bin_path, "output.txt"), "r", encoding='utf8') as output_file:
+		with open(os.path.join(BINARY_PATH, "output.txt"), "r", encoding='utf8') as output_file:
 			for line in output_file.readlines():
 				mystem_result = json.loads(line)
 				text = mystem_result["text"]
@@ -76,8 +75,8 @@ class FeaturesExtractor(object):
 					result[text] = (mystem_result["analysis"][0]["lex"].lower() + "_" 
 						+ part_of_speech, mystem_info)
 		# remove files
-		os.remove(os.path.join(bin_path, "input.txt"))
-		os.remove(os.path.join(bin_path, "output.txt"))
+		os.remove(os.path.join(BINARY_PATH, "input.txt"))
+		os.remove(os.path.join(BINARY_PATH, "output.txt"))
 		return result
 	@staticmethod
 	def get_capitalization(token_text):

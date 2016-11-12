@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from markup_doc import TokenInfo
+from common_config import DOCUMENTS_CHUNK_SIZE
+
 import collections
 import id_generator
 import markup_doc
 import os
-from markup_doc import TokenInfo
-
-DOCUMENTS_CHUNK_SIZE = 100
 
 class TokenizedDocument:
 	def __init__(self, input_dir, document_name):
