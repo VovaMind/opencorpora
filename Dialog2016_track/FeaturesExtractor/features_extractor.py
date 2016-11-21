@@ -42,11 +42,13 @@ class FeaturesExtractor(object):
 			for token in doc_tokens:
 				input_file.write(token.text + "\n")
 		# run mystem
-		args = os.path.join(BINARY_PATH, MYSTEM_FILE_NAME)
-		args += (
-			" -nid --format json " + os.path.join(BINARY_PATH, "input.txt") + " " 
-			+ os.path.join(BINARY_PATH, "output.txt")
-		)
+		args = []
+		args.append(os.path.join(BINARY_PATH, MYSTEM_FILE_NAME))
+		args.append("-nid")
+		args.append("--format")
+		args.append("json")
+		args.append(os.path.join(BINARY_PATH, "input.txt"))
+		args.append(os.path.join(BINARY_PATH, "output.txt"))
 		subprocess.call(args, shell=False)
 		# read result
 		result = {}
