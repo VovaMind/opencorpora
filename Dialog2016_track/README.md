@@ -17,5 +17,7 @@
   1. Извлекаем признаки из рамеченного корпуса testset с помощью FeaturesExtractor/get_testset_features.py. (devset не подходит, так как участники его видели)
   2. Запускаем DataAnalysis/token_objects.R и потом DataAnalysis/token_span_types.R.
 3. Извлечение признаков из всего корпуса: FeaturesExtractor/get_corpora_features.py.
+Для эффективности делаем извлечение признаков параллельно. Для этого нужно задать "parts_count" в common_config'е.
+Также требуется запускать get_corpora_features с одним параметром - номер части (от 0 до parts_count - 1).
 4. Получаем объекты и спаны для всего корпуса: DataAnalysis/restore_full_corpus.R.
 5. Получаем итоговую разметку: FeaturesExtractor/markup_builder.py.
