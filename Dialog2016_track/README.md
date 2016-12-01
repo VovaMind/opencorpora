@@ -19,5 +19,7 @@
 3. Извлечение признаков из всего корпуса: FeaturesExtractor/get_corpora_features.py.
 Для эффективности делаем извлечение признаков параллельно. Для этого нужно задать "parts_count" в common_config'е.
 Также требуется запускать get_corpora_features с одним параметром - номер части (от 0 до parts_count - 1).
-4. Получаем объекты и спаны для всего корпуса: DataAnalysis/restore_full_corpus.R.
+4. Получаем объекты и спаны для всего корпуса: DataAnalysis/restore_full_corpus.R. 
+Его нужно запускать как Rscript restore_full_corpus.R input_dir, где input_dir - каталог с извлеченными признаками.
+Предполагается параллельный запуск скрипта для каждой из частей.
 5. Получаем итоговую разметку: FeaturesExtractor/markup_builder.py.
