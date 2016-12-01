@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from markup_doc import TokenInfo
-from common_config import DOCUMENTS_CHUNK_SIZE
+from common_config import DOCUMENTS_CHUNK_SIZE, GET_CORPORA_FEATURES_PARAMS
 
 import collections
 import id_generator
@@ -37,12 +37,21 @@ class TokenizedDocument:
 				return False
 		return True
 
+def is_corpus_doc(part_id, doc_name):
+	parts = doc_name.split("_")
+	if len(parts) < 2:
+		return False
+	try:
+		return int(parts[1]) % GET_CORPORA_FEATURES_PARAMS["parts_count"] == part_id
+	except ValueError:
+		return False
+
 class FullCorpus:
 	''' "Полный" корпус. 
 	TODO: комментарий
 	'''
 	
-	def __init__(self, input_dir):
+	def __init__(self, input_dir, part_id):
 		self.documents_cache = {}
 		self.current_doc_pos = 0
 		self.input_dir = input_dir
@@ -52,6 +61,7 @@ class FullCorpus:
 		
 		# Убираем расширения файлов.
 		doc_names = map(lambda x: x[0:x.find(".")], dir_file_names)
+		doc_names = filter(lambda x: is_corpus_doc(part_id, x), doc_names)
 		
 		# оставляем только документы с полной информацией, 
 		# то есть для каждого документа book_id есть:

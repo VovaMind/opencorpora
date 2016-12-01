@@ -20,7 +20,9 @@ GET_CORPORA_FEATURES_PARAMS = {
 	"w2v_model_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\news_win20.model.bin",
 	# Сериализованный набор множеств для участников. 
 	# Он строится в процессе обработки размеченного корпуса.
-	"sets_dump_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin"
+	"sets_dump_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin",
+	# Количество частей на которые делим весь корпус для параллельного извлечения признаков
+	"parts_count": 10
 }
 
 # Признаки для токенов занимают много простанства на диске.

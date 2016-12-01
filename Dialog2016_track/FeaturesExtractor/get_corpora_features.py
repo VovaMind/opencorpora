@@ -10,33 +10,35 @@ import id_generator
 import os
 import sets_collection
 import shutil
+import sys
 import time
 
 current_output_file_id = 0
 
-def init_dir():
-	if os.path.exists(GET_CORPORA_FEATURES_PARAMS["output_dir"]):
-		shutil.rmtree(GET_CORPORA_FEATURES_PARAMS["output_dir"])
-		time.sleep(2)
-	if not os.path.exists(GET_CORPORA_FEATURES_PARAMS["output_dir"]):
-		try:
-			os.mkdir(GET_CORPORA_FEATURES_PARAMS["output_dir"])
-		except:
-			# TODO: o_O
-			init_dir()
+def get_output_dir_path(part_id):
+	return os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], str(part_id))
+	
+def init_dir(part_id):
+	output_dir_path = get_output_dir_path(part_id)
+	if not os.path.exists(output_dir_path):
+		os.makedirs(output_dir_path)
 
-def get_output_file_names():
+def get_output_file_names(part_id):
 	global current_output_file_id
 	print("Current file id: " + str(current_output_file_id))
 	if current_output_file_id == 0:
-		init_dir()
+		init_dir(part_id)
 	temp = current_output_file_id
 	current_output_file_id += 1
-	return (os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], "_features_" + str(temp) + ".csv"),
-			os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], "_token_docs_" + str(temp) + ".txt"))
+	output_dir_path = get_output_dir_path(part_id)
+	return (os.path.join(output_dir_path, "_features_" + str(temp) + ".csv"),
+			os.path.join(output_dir_path, "_token_docs_" + str(temp) + ".txt"))
 
 def extract_features():
-	corpus = full_corpus.FullCorpus(GET_CORPORA_FEATURES_PARAMS["input_dir"])
+	# TODO: comment
+	part_id = int(sys.argv[1])
+	id_generator.IdGenerator.current_id = 100000000 * part_id
+	corpus = full_corpus.FullCorpus(GET_CORPORA_FEATURES_PARAMS["input_dir"], part_id)
 	extractor = features_extractor.FeaturesExtractor()
 	extractor.load_w2v_data(GET_CORPORA_FEATURES_PARAMS["w2v_model_file"])
 	output_collection = sets_collection.SetsCollection()
@@ -45,13 +47,13 @@ def extract_features():
 		docs = corpus.get_documents_chunk()
 		if not docs:
 			break
-		output_file_names = get_output_file_names()
+		output_file_names = get_output_file_names(part_id)
 		# Save tokens and token->doc map.
 		is_first_doc = True
 		for doc in docs:
 			# Сохраняем для документа его исходный текст
 			source_doc_path = os.path.join(GET_CORPORA_FEATURES_PARAMS["input_dir"], doc + ".txt")
-			target_doc_path = os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], doc + ".txt")
+			target_doc_path = os.path.join(get_output_dir_path(part_id), doc + ".txt")
 			copyfile(source_doc_path, target_doc_path)
 			try:
 				doc_tokens = list(corpus.get_document_info(doc).tokens.values())
@@ -59,7 +61,7 @@ def extract_features():
 				print("Bad document name: " + doc)
 				continue
 			doc_tokens.sort(key = lambda x: x.pos)
-			with open(os.path.join(GET_CORPORA_FEATURES_PARAMS["output_dir"], doc + ".tokens"), "w", 
+			with open(os.path.join(get_output_dir_path(part_id), doc + ".tokens"), "w", 
 					encoding="utf-8") as token_file:
 				for token  in doc_tokens:
 					token_file.write(str(token.id) + " ")

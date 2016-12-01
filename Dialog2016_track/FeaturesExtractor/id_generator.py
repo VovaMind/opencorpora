@@ -2,7 +2,7 @@
 
 class IdGenerator:
 	''' Генерация последовательных id'ков. '''
-	current_id = 100000000
+	current_id = 0
 	@staticmethod
 	def get():
 		IdGenerator.current_id += 1
