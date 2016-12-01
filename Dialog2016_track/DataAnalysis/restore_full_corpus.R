@@ -6,7 +6,10 @@ objects_model <- boost_model
 load("spans_model.bin")
 spans_model <- boost_model
 
-OUTPUT_FILES_COUNT = 3
+args = commandArgs()
+setwd(args[len(args)])
+
+OUTPUT_FILES_COUNT = 5000
 for (i in 0:(OUTPUT_FILES_COUNT - 1)) {
         input_file_name <- paste('_features_', as.character(i), '.csv', sep='')
         print(input_file_name)
