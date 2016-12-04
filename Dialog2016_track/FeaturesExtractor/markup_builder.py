@@ -185,7 +185,8 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 			object_file.write("\n")
 
 def build_chunk_markup(doc_to_tokens, token_to_output):
-	id_generator.IdGenerator.current_id = 1000000000 #TODO: remove hardcode??
+	#TODO: id scheme update?
+	id_generator.IdGenerator.current_id = 1000000000 + int(sys.argv[1])*100000000
 	for doc in doc_to_tokens:
 		token_to_spans = extract_doc_spans(doc_to_tokens[doc], token_to_output)
 		doc_objects = extract_doc_objects(doc_to_tokens[doc], token_to_output, token_to_spans)
