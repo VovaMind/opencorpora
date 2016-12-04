@@ -52,3 +52,9 @@ GET_TESTSET_FEATURES_PARAMS = {
 	# Он строится в процессе обработки размеченного корпуса.
 	"sets_dump_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin"
 }
+
+# Параметры для get_contest_format.py
+GET_CONTEST_FORMAT_PARAMS = {
+	# Пишем результаты извлечения признаков для документов в эту папку
+	"work_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\!test_output",
+}
