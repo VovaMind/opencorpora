@@ -4,7 +4,7 @@ library(class)
 set.seed(281189)
 
 
-data <- read.csv('MarkupData_pos.csv')
+data <- read.csv('MarkupData.csv')
 data <- data[,!(names(data) %in% c("token_text"))]
 
 drops <- c("token_id", "token_span_types")

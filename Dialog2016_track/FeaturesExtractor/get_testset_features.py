@@ -16,7 +16,7 @@ def extract_features():
 	extractor.exract_markup_data_track1(GET_TESTSET_FEATURES_PARAMS["markup_dir"], 
 										GET_TESTSET_FEATURES_PARAMS["participants_dir"], 
 										GET_TESTSET_FEATURES_PARAMS["output_file_name"],
-										"test", output_collection)
+										"testset", output_collection)
 	output_collection.save(GET_TESTSET_FEATURES_PARAMS["sets_dump_file"])
 
 if __name__ == '__main__':

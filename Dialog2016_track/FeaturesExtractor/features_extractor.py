@@ -38,7 +38,10 @@ class FeaturesExtractor(object):
 		'''Строим мапу текст токена -> 
 		(лексема + часть речи, mystem_info)
 		'''
-		with open(os.path.join(BINARY_PATH, "input.txt"), "w", encoding='utf8') as input_file:
+		input_fn = "input_" + str(os.getpid()) + ".txt"
+		output_fn = "output_" + str(os.getpid()) + ".txt"
+
+		with open(os.path.join(BINARY_PATH, input_fn), "w", encoding='utf8') as input_file:
 			for token in doc_tokens:
 				input_file.write(token.text + "\n")
 		# run mystem
@@ -47,12 +50,12 @@ class FeaturesExtractor(object):
 		args.append("-nid")
 		args.append("--format")
 		args.append("json")
-		args.append(os.path.join(BINARY_PATH, "input.txt"))
-		args.append(os.path.join(BINARY_PATH, "output.txt"))
+		args.append(os.path.join(BINARY_PATH, input_fn))
+		args.append(os.path.join(BINARY_PATH, output_fn))
 		subprocess.call(args, shell=False)
 		# read result
 		result = {}
-		with open(os.path.join(BINARY_PATH, "output.txt"), "r", encoding='utf8') as output_file:
+		with open(os.path.join(BINARY_PATH, output_fn), "r", encoding='utf8') as output_file:
 			for line in output_file.readlines():
 				mystem_result = json.loads(line)
 				text = mystem_result["text"]
@@ -77,8 +80,8 @@ class FeaturesExtractor(object):
 					result[text] = (mystem_result["analysis"][0]["lex"].lower() + "_" 
 						+ part_of_speech, mystem_info)
 		# remove files
-		os.remove(os.path.join(BINARY_PATH, "input.txt"))
-		os.remove(os.path.join(BINARY_PATH, "output.txt"))
+		os.remove(os.path.join(BINARY_PATH, input_fn))
+		os.remove(os.path.join(BINARY_PATH, output_fn))
 		return result
 	@staticmethod
 	def get_capitalization(token_text):
