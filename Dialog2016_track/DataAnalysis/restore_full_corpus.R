@@ -7,7 +7,7 @@ load("spans_model.bin")
 spans_model <- boost_model
 
 args = commandArgs()
-setwd(args[len(args)])
+setwd(args[length(args)])
 
 OUTPUT_FILES_COUNT = 5000
 for (i in 0:(OUTPUT_FILES_COUNT - 1)) {
