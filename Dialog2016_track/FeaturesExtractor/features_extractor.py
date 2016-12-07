@@ -91,7 +91,21 @@ class FeaturesExtractor(object):
 			return 'Capital'
 		else:
 			return 'lower'
-	def create_init_data_frame(self, doc_tokens, participant_outputs, is_markup_data):
+	@staticmethod
+	def update_data(is_markup_data, init_data, output_collection):
+		data_prefix = "!corrected_data_"
+		if is_markup_data:
+			output_collection.add_set(data_prefix + "token_type", init_data['token_type'][-1])
+			output_collection.add_set(data_prefix + "mystem_info", init_data['mystem_info'][-1])
+			output_collection.add_set(data_prefix + "part_of_speech", init_data['part_of_speech'][-1])
+		else:
+			if not output_collection.has_set(data_prefix + "token_type", init_data['token_type'][-1]):
+				init_data['token_type'][-1] = "Punctuator:Unknown"
+			if not output_collection.has_set(data_prefix + "mystem_info", init_data['mystem_info'][-1]):
+				init_data['mystem_info'][-1] = "mystem:none"
+			if not output_collection.has_set(data_prefix + "part_of_speech", init_data['part_of_speech'][-1]):
+				init_data['part_of_speech'][-1] = "UNKNOWN"
+	def create_init_data_frame(self, doc_tokens, participant_outputs, is_markup_data, output_collection):
 		'''Создаем и инициализируем DataFrame. 
 		Строки - токены, столбцы - признаки
 		'''
@@ -125,6 +139,7 @@ class FeaturesExtractor(object):
 				# TODO: дублирование константы убрать
 				init_data['mystem_info'].append("mystem:none")
 				init_data['part_of_speech'].append("UNKNOWN")
+			FeaturesExtractor.update_data(is_markup_data, init_data, output_collection)
 			# Добавляем w2v признаки
 			w2v_features = self.extract_w2v_features(mystem_result, token.text, token.type)
 			assert len(w2v_features) == WORD2VEC_FEATURES_COUNT
@@ -192,6 +207,7 @@ class FeaturesExtractor(object):
 				updated_values.append(str_value)
 			if updated_values:
 				data[col_name] = updated_values
+				continue
 		return data
 	@staticmethod
 	def get_participant_col_name(participant_name):
@@ -224,7 +240,7 @@ class FeaturesExtractor(object):
 			doc_tokens.sort(key = lambda x: x.pos)
 			tokens_start_pos.sort()
 			# Создаем DataFrame
-			result_data = self.create_init_data_frame(doc_tokens, participant_outputs, True)
+			result_data = self.create_init_data_frame(doc_tokens, participant_outputs, True, output_collection)
 			# Итерируем участников и навешиваем объекты на токены
 			for participant in participant_outputs:
 				column_name = FeaturesExtractor.get_participant_col_name(participant.name)
@@ -276,7 +292,7 @@ class FeaturesExtractor(object):
 			doc_tokens.sort(key = lambda x: x.pos)
 			tokens_start_pos.sort()
 			# Создаем DataFrame
-			result_data = self.create_init_data_frame(doc_tokens, self.participant_outputs, False)
+			result_data = self.create_init_data_frame(doc_tokens, self.participant_outputs, False, output_collection)
 			# Итерируем участников и навешиваем объекты на токены
 			for participant in self.participant_outputs:
 				column_name = FeaturesExtractor.get_participant_col_name(participant.name)
