@@ -154,12 +154,12 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 			text_end_pos = document.tokens[end_token_pos].pos + \
 			document.tokens[end_token_pos].length
 			# Выводим спан
-			span_file.write(span.type + " ")
 			span_file.write(str(span.id) + " ")
-			span_file.write(str(span.token_pos) + " ")
-			span_file.write(str(span.token_length) + " ")
+			span_file.write(span.type + " ")
 			span_file.write(str(text_start_pos) + " ")
-			span_file.write(str(text_end_pos - text_start_pos) + "  # ")
+			span_file.write(str(text_end_pos - text_start_pos) + " ")
+			span_file.write(str(span.token_pos) + " ")
+			span_file.write(str(span.token_length) + "  # ")
 			try:
 				span_file.write(debug_text)
 			except:
