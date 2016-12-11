@@ -160,12 +160,14 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 			span_file.write(str(text_end_pos - text_start_pos) + " ")
 			span_file.write(str(span.token_pos) + " ")
 			span_file.write(str(span.token_length) + "  # ")
-			try:
-				span_file.write(debug_text)
-			except:
-				# Иногда в тексте встречаются "плохие" символы
-				# Не выводим текст в этому случае
-				pass
+			for i in range(span.token_pos, span.token_pos + span.token_length):
+				span_file.write(str(i) + " ")
+			for ch in debug_text:
+				try:
+					span_file.write(ch)
+				except:
+					# Иногда в тексте встречаются "плохие" символы
+					span_file.write("?")
 			span_file.write("\n")
 	# Выводим объекты
 	with open(os.path.join(get_work_dir(), doc_name + ".objects"), "w") as object_file:
