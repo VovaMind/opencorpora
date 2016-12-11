@@ -107,7 +107,10 @@ def extract_doc_objects(doc_token_ids, token_output, token_to_spans):
 				new_object = markup_doc.ObjectInfo(id = id_generator.IdGenerator.get(),
 												type = prev_token_class,
 												span_ids = sorted(list(objects_span_ids[prev_token_class])))
-				result.append(new_object)
+				# Иногда нет подходящих спанов для объекта (случай LocOrg+Org)
+				# В этом случае пропускаем объект
+				if new_object.span_ids:
+					result.append(new_object)
 				objects_span_ids.pop(prev_token_class)
 		# Объект есть в текущем токене, но нет в предыдущем.
 		# Это означает начало очередного объекта.
