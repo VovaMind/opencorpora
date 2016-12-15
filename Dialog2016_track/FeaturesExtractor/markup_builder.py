@@ -112,7 +112,8 @@ def extract_doc_objects(doc_token_ids, token_output, token_to_spans, id_to_token
 		# Обработка случая org_descr "org_name"
 		# Мы не должны разрывать объект в этому случае, несмотря на то
 		# что на токене " не висит объект
-		if id_to_token[token_id][1] == 1 and re.search(r"\w", id_to_token[token_id][2]) is None:
+		if id_to_token[token_id][2] == "\"" or id_to_token[token_id][2] == "'" or\
+		id_to_token[token_id][2] == "«" or id_to_token[token_id][2] == "<":
 			continue
 		token_objects = set(token_output[token_id].objects.split("+"))
 		# Объект был в прошлом токене, но нет в текущем спане.
