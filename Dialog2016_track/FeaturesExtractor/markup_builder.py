@@ -6,6 +6,7 @@ from common_config import MARKUP_BUILDER_PARAMS
 import id_generator
 import markup_doc
 import os
+import re
 import sys
 import time
 
@@ -39,6 +40,16 @@ def read_output_file(file_name):
 			token_id = int(line_parts[1])
 			token_output = TokenOutput(line_parts[2], line_parts[3])
 			result[token_id] = token_output
+	return result
+
+def read_tokens_file(doc_name):
+	result = {}
+	with open(os.path.join(get_work_dir(), doc_name + ".tokens"), "r", encoding="utf-8") as tokens_file:
+		for file_line in tokens_file.readlines():
+			parts = file_line.replace("\n", "").split(" ")
+			if len(parts) < 4:
+				continue
+			result[int(parts[0])] = (int(parts[1]), int(parts[2]), parts[3])
 	return result
 
 def extract_doc_spans(doc_token_ids, token_output):
@@ -94,10 +105,15 @@ def get_object_span_ids(class_name, spans):
 			result.add(span.id)
 	return result
 
-def extract_doc_objects(doc_token_ids, token_output, token_to_spans):
+def extract_doc_objects(doc_token_ids, token_output, token_to_spans, id_to_token):
 	result = []
 	objects_span_ids = {}
 	for token_id in doc_token_ids:
+		# Обработка случая org_descr "org_name"
+		# Мы не должны разрывать объект в этому случае, несмотря на то
+		# что на токене " не висит объект
+		if id_to_token[token_id][1] == 1 and re.search(r"\w", id_to_token[token_id][2]) is None:
+			continue
 		token_objects = set(token_output[token_id].objects.split("+"))
 		# Объект был в прошлом токене, но нет в текущем спане.
 		# Это значит очередной объект завершился.
@@ -193,8 +209,9 @@ def build_chunk_markup(doc_to_tokens, token_to_output):
 	#TODO: id scheme update?
 	id_generator.IdGenerator.current_id = 1000000000 + int(sys.argv[1])*100000000
 	for doc in doc_to_tokens:
+		id_to_token = read_tokens_file(doc)
 		token_to_spans = extract_doc_spans(doc_to_tokens[doc], token_to_output)
-		doc_objects = extract_doc_objects(doc_to_tokens[doc], token_to_output, token_to_spans)
+		doc_objects = extract_doc_objects(doc_to_tokens[doc], token_to_output, token_to_spans, id_to_token)
 		output_document(doc, doc_to_tokens[doc], token_to_spans, doc_objects)
 
 def build_markup():
