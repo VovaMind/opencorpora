@@ -207,8 +207,6 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 			object_file.write("\n")
 
 def build_chunk_markup(doc_to_tokens, token_to_output):
-	#TODO: id scheme update?
-	id_generator.IdGenerator.current_id = 1000000000 + int(sys.argv[1])*100000000
 	for doc in doc_to_tokens:
 		id_to_token = read_tokens_file(doc)
 		token_to_spans = extract_doc_spans(doc_to_tokens[doc], token_to_output)
@@ -216,6 +214,8 @@ def build_chunk_markup(doc_to_tokens, token_to_output):
 		output_document(doc, doc_to_tokens[doc], token_to_spans, doc_objects)
 
 def build_markup():
+	#TODO: id schema update?
+	id_generator.IdGenerator.current_id = 1000000000 + int(sys.argv[1])*100000000
 	for chunk_id in range(OUTPUT_CHUNKS_COUNT):
 		# Читаем файл с парами id токена; имя документа и строим отображение:
 		# имя документа -> id токенов
