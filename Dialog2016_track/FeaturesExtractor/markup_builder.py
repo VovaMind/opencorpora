@@ -2,6 +2,7 @@
 ''' Механизм построения результирующей разметки. '''
 
 from common_config import MARKUP_BUILDER_PARAMS
+from string_set import StringSet
 
 import id_generator
 import markup_doc
@@ -32,14 +33,31 @@ class TokenOutput:
 
 def read_output_file(file_name):
 	result = {}
+	token_ids = []
 	with open(file_name, "r") as input_file:
 		for file_line in input_file.readlines():
 			if (file_line.replace("\n", "") == '"","id","objects","spans"'):
 				continue
 			line_parts = file_line.replace("\n", "").replace('"', "").split(",")
 			token_id = int(line_parts[1])
+			token_ids.append(token_id)
 			token_output = TokenOutput(line_parts[2], line_parts[3])
 			result[token_id] = token_output
+	# add objects by neighbours (0-st tuple part)
+	objects = []
+	for i in result.values():
+		current_objects = StringSet()
+		current_objects.load_from_string(i.objects)
+		objects.append(current_objects)
+	for (i, j) in zip(objects, range(len(objects))):
+		if not i.has_string("LocOrg"):
+			continue
+		for object_to_add in ["Org", "Location"]:
+			if (j > 0 and objects[j - 1].has_string(object_to_add)) or\
+			( j < len(objects) - 1 and objects[j + 1].has_string(object_to_add)):
+				i.add_string(object_to_add)
+	for (i, j) in zip (objects, token_ids):
+		result[j].objects = i.get_all()
 	return result
 
 def read_tokens_file(doc_name):
@@ -167,6 +185,7 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 				if len(debug_text) > 0:
 					debug_text += " "
 				debug_text += document.tokens[i].text
+			debug_text = debug_text.replace("\n", "")
 			span_texts[span.id] = debug_text
 			# Находим границы в тексте
 			text_start_pos = document.tokens[span.token_pos].pos
