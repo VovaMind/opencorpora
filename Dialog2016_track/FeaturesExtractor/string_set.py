@@ -19,6 +19,8 @@ class StringSet(object):
 		'''Добавляем строку в набор.'''
 		assert isinstance(obj, str)
 		self.objects.add(obj)
+	def has_string(self, str):
+		return str in self.objects
 	def load_from_string(self, str):
 		if str == "NONE":
 			self.object = set()
