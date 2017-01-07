@@ -45,9 +45,9 @@ def read_output_file(file_name):
 			result[token_id] = token_output
 	# add objects by neighbours (0-st tuple part)
 	objects = []
-	for i in result.values():
+	for i in token_ids:
 		current_objects = StringSet()
-		current_objects.load_from_string(i.objects)
+		current_objects.load_from_string(result[i].objects)
 		objects.append(current_objects)
 	for (i, j) in zip(objects, range(len(objects))):
 		if not i.has_string("LocOrg"):
@@ -56,7 +56,7 @@ def read_output_file(file_name):
 			if (j > 0 and objects[j - 1].has_string(object_to_add)) or\
 			( j < len(objects) - 1 and objects[j + 1].has_string(object_to_add)):
 				i.add_string(object_to_add)
-	for (i, j) in zip (objects, token_ids):
+	for (i, j) in zip(objects, token_ids):
 		result[j].objects = i.get_all()
 	return result
 
