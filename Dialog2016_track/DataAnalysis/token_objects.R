@@ -1,5 +1,5 @@
-library(adabag)
 library(class)
+library(randomForest)
 
 set.seed(281189)
 
@@ -17,14 +17,14 @@ n = nrow(filteredData)
 random_seed <- sample(0:10, n, replace=T)
 data$is_test <- random_seed >= 5
 
-boost_model <- boosting(token_objects~., data=filteredData[!data$is_test,], mfinal=10)
+boost_model <- randomForest(token_objects~., data=filteredData[!data$is_test,], mfinal=10)
 boost_result <- predict(boost_model, filteredData[data$is_test,])
-stats <- filteredData[data$is_test,]$token_objects == boost_result$class
+stats <- filteredData[data$is_test,]$token_objects == boost_result
 print(table(stats)) 
 print(table(filteredData[data$is_test,][!stats,]$token_objects))
 
 data$found_objects <- filteredData$token_objects
-data[data$is_test,]$found_objects <- boost_result$class
+data[data$is_test,]$found_objects <- boost_result
 
 
 save(boost_model, file="objects_model.bin")
