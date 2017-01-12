@@ -18,8 +18,6 @@ class StringSet(object):
 	def add_string(self, obj):
 		'''Добавляем строку в набор.'''
 		assert isinstance(obj, str)
-		if obj.lower() == 'facility':
-			return
 		self.objects.add(obj)
 	def has_string(self, str):
 		return str in self.objects
