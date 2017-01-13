@@ -3,7 +3,6 @@ library(randomForest)
 
 set.seed(281189)
 
-
 data <- read.csv('found_objects.csv')
 
 drops <- c("token_id", "token_objects")
