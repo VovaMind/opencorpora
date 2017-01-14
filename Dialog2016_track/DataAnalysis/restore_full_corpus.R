@@ -17,7 +17,9 @@ for (i in 0:(OUTPUT_FILES_COUNT - 1)) {
         data <- read.csv(input_file_name)
 		# Fix for randomForest, it requires identical levels in train and test
 		for (col_name in colnames(data)) {
-			levels(data[,col_name]) <- levels(train_data[,col_name])
+			if (col_name != 'token_id') {
+				levels(data[,col_name]) <- levels(train_data[,col_name])
+			}
 		}
         objects_result <- predict(objects_model, data)
         data$found_objects <- objects_result
