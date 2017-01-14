@@ -155,9 +155,12 @@ def extract_doc_objects(doc_token_ids, token_output, token_to_spans, id_to_token
 			if current_token_class not in objects_span_ids:
 				objects_span_ids[current_token_class] = set()
 			# Добавляем id'ники спанов для объектов
-			new_span_ids = get_object_span_ids(current_token_class, token_to_spans[token_id])
-			objects_span_ids[current_token_class] = set.union(
-				objects_span_ids[current_token_class], new_span_ids)
+			# Иногда есть токены с объектом, но без спана
+			# Не добавляем спаны в этом случае
+			if token_id in token_to_spans:
+				new_span_ids = get_object_span_ids(current_token_class, token_to_spans[token_id])
+				objects_span_ids[current_token_class] = set.union(
+					objects_span_ids[current_token_class], new_span_ids)
 	for last_token_class in objects_span_ids:
 		new_object = markup_doc.ObjectInfo(id = id_generator.IdGenerator.get(),
 										type = last_token_class,
