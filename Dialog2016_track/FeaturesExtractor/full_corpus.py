@@ -27,7 +27,7 @@ class TokenizedDocument:
 				token_id = id_generator.IdGenerator.get()
 				token = markup_doc.TokenInfo(token_id, text_pos, len(token_text), token_text)
 				self.tokens[token_id] = token
-				text_pos += 1
+				text_pos += len(token_text)
 	@staticmethod
 	def is_matched(document_text, text_pos, token_text):
 		# Пытаемся оптимизировать вместо встроенных функций
