@@ -17,15 +17,17 @@ for (i in 0:(OUTPUT_FILES_COUNT - 1)) {
         data <- read.csv(input_file_name)
 		# Fix for randomForest, it requires identical levels in train and test
 		for (col_name in colnames(data)) {
-			if (col_name != 'token_id') {
+			if (col_name != 'token_id' && is.factor(data[,col_name])) {
 				data[,col_name] <- factor(as.character(data[,col_name]), 
 										levels = levels(train_data[,col_name]))
 			}
 		}
         objects_result <- predict(objects_model, data)
         data$found_objects <- objects_result
-		data$found_objects <- factor(as.character(data$found_objects), 
-									levels = levels(train_data$found_objects))
+		if (is.factor(data$found_objects)) {
+			data$found_objects <- factor(as.character(data$found_objects), 
+										levels = levels(train_data$found_objects))
+		}
         data$is_test <- rep(T, nrow(data))
         spans_result <- predict(spans_model, data)
         answer = data.frame(id = data$token_id, 
