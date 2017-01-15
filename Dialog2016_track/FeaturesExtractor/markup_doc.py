@@ -3,6 +3,10 @@ import os
 import re
 import string_set
 
+PREPOSITIONS = ['без', 'в', 'вблизи', 'вглубь', 'вдоль', 'возле', 'вокруг', 'впереди', 'для', 
+	'до', 'за', 'из', 'к', 'на', 'над', 'о', 'об', 'около', 'от', 'перед', 'по', 'под', 
+	'после', 'при', 'про', 'с', 'у', 'через']
+
 class TokenInfo(object):
 	'''Информация о конкретном токене из документа'''
 	def __init__(self, id, pos, length, text):
@@ -22,7 +26,12 @@ class TokenInfo(object):
 		# Если есть хотя бы один алфавитный символ, 
 		# то считаем токен словом
 		if re.search(r"\w", self.text) is not None:
-			self.type = "Word"
+			preposition_index = bisect.bisect_left(PREPOSITIONS, self.text.lower())
+			if preposition_index < len(PREPOSITIONS) and\
+				PREPOSITIONS[preposition_index] == self.text.lower():
+				self.type = "Preposition_" + str(preposition_index)
+			else:
+				self.type = "Word"
 		else:
 			self.type = "Punctuator:"
 			# Определяем тип пунктуатора
