@@ -123,18 +123,25 @@ def get_object_span_ids(class_name, spans):
 			result.add(span.id)
 	return result
 
-def extract_doc_objects(doc_token_ids, token_output, token_to_spans, id_to_token):
+def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, id_to_token):
+	document = markup_doc.MarkupDoc(os.path.join(get_work_dir(), doc_name), doc_name, True)
 	result = []
 	objects_span_ids = {}
+	prev_token_id = -1
 	for token_id in doc_token_ids:
 		# Обработка случая org_descr "org_name"
 		# Мы не должны разрывать объект в этому случае, несмотря на то
 		# что на токене " не висит объект
 		# Не разрываем объект по точке: обработка случая "Л.Н. Толстой"
 		if id_to_token[token_id][2] == "\"" or id_to_token[token_id][2] == "'" or\
-		id_to_token[token_id][2] == "«" or id_to_token[token_id][2] == "<" or\
-		id_to_token[token_id][2] == ".":
+		id_to_token[token_id][2] == "«" or id_to_token[token_id][2] == "<":
+			prev_token_id = token_id
 			continue
+		if id_to_token[token_id][2] == "." and prev_token_id != -1 and\
+		document.tokens[prev_token_id].length <= 2:
+			prev_token_id = token_id
+			continue
+		prev_token_id = token_id
 		token_objects = set(token_output[token_id].objects.split("+"))
 		# Объект был в прошлом токене, но нет в текущем спане.
 		# Это значит очередной объект завершился.
@@ -234,7 +241,7 @@ def build_chunk_markup(doc_to_tokens, token_to_output):
 	for doc in doc_to_tokens:
 		id_to_token = read_tokens_file(doc)
 		token_to_spans = extract_doc_spans(doc_to_tokens[doc], token_to_output)
-		doc_objects = extract_doc_objects(doc_to_tokens[doc], token_to_output, token_to_spans, id_to_token)
+		doc_objects = extract_doc_objects(doc, doc_to_tokens[doc], token_to_output, token_to_spans, id_to_token)
 		output_document(doc, doc_to_tokens[doc], token_to_spans, doc_objects)
 
 def build_markup():
