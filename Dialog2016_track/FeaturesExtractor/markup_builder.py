@@ -70,17 +70,19 @@ def read_tokens_file(doc_name):
 			result[int(parts[0])] = (int(parts[1]), int(parts[2]), parts[3])
 	return result
 
-def extract_doc_spans(doc_token_ids, token_output):
+def extract_doc_spans(doc_name, doc_token_ids, token_output):
+	document = markup_doc.MarkupDoc(os.path.join(get_work_dir(), doc_name), doc_name, True)
 	result = {}
 	token_ids = sorted(doc_token_ids)
 	spans_start = {}
 	for (token_id, i) in zip(token_ids, range(len(token_ids))):
+		is_new_line = document.tokens[token_id].is_new_line
 		token_spans = set(token_output[token_id].spans.split("+"))
 		# Спан был в прошлом токене, но нет в текущем спане.
 		# Это значит очередной спан завершился.
 		prev_token_spans = list(spans_start.keys())
 		for prev_token_span in prev_token_spans:
-			if prev_token_span not in token_spans:
+			if prev_token_span not in token_spans or is_new_line:
 				new_span = markup_doc.SpanInfo(type = prev_token_span, 
 											id = id_generator.IdGenerator.get(),
 											token_pos = token_ids[spans_start[prev_token_span]],
@@ -128,6 +130,7 @@ def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, i
 	result = []
 	objects_span_ids = {}
 	prev_token_id = -1
+	skip_prev_token = False
 	for token_id in doc_token_ids:
 		# Обработка случая org_descr "org_name"
 		# Мы не должны разрывать объект в этому случае, несмотря на то
@@ -136,18 +139,25 @@ def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, i
 		if id_to_token[token_id][2] == "\"" or id_to_token[token_id][2] == "'" or\
 		id_to_token[token_id][2] == "«" or id_to_token[token_id][2] == "<":
 			prev_token_id = token_id
+			skip_prev_token = True
 			continue
 		if id_to_token[token_id][2] == "." and prev_token_id != -1 and\
 		document.tokens[prev_token_id].length <= 2:
 			prev_token_id = token_id
+			skip_prev_token = True
 			continue
+		is_new_line = False
+		if document.tokens[token_id].is_new_line or\
+		(skip_prev_token and document.tokens[prev_token_id].is_new_line):
+			is_new_line = True
+		skip_prev_token = False
 		prev_token_id = token_id
 		token_objects = set(token_output[token_id].objects.split("+"))
 		# Объект был в прошлом токене, но нет в текущем спане.
 		# Это значит очередной объект завершился.
 		prev_token_classes = list(objects_span_ids.keys())
 		for prev_token_class in prev_token_classes:
-			if prev_token_class not in token_objects:
+			if prev_token_class not in token_objects or skip_prev_token:
 				new_object = markup_doc.ObjectInfo(id = id_generator.IdGenerator.get(),
 												type = prev_token_class,
 												span_ids = sorted(list(objects_span_ids[prev_token_class])))
@@ -240,7 +250,7 @@ def output_document(doc_name, doc_token_ids, token_to_spans, doc_objects):
 def build_chunk_markup(doc_to_tokens, token_to_output):
 	for doc in doc_to_tokens:
 		id_to_token = read_tokens_file(doc)
-		token_to_spans = extract_doc_spans(doc_to_tokens[doc], token_to_output)
+		token_to_spans = extract_doc_spans(doc, doc_to_tokens[doc], token_to_output)
 		doc_objects = extract_doc_objects(doc, doc_to_tokens[doc], token_to_output, token_to_spans, id_to_token)
 		output_document(doc, doc_to_tokens[doc], token_to_spans, doc_objects)
 

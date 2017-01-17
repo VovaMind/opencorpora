@@ -21,6 +21,7 @@ class TokenizedDocument:
 			for file_line in token_file.readlines():
 				token_text = file_line.replace("\n", "")
 				if not token_text:
+					self.tokens[token_id].is_new_line = True
 					continue
 				while not TokenizedDocument.is_matched(document_text, text_pos, token_text):
 					text_pos += 1
