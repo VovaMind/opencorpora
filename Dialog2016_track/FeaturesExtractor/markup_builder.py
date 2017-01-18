@@ -157,7 +157,7 @@ def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, i
 		# Это значит очередной объект завершился.
 		prev_token_classes = list(objects_span_ids.keys())
 		for prev_token_class in prev_token_classes:
-			if prev_token_class not in token_objects or skip_prev_token:
+			if prev_token_class not in token_objects or is_new_line:
 				new_object = markup_doc.ObjectInfo(id = id_generator.IdGenerator.get(),
 												type = prev_token_class,
 												span_ids = sorted(list(objects_span_ids[prev_token_class])))
