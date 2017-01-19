@@ -70,13 +70,24 @@ def read_tokens_file(doc_name):
 			result[int(parts[0])] = (int(parts[1]), int(parts[2]), parts[3])
 	return result
 
+def read_tokens_list(doc_name):
+	''' Читаем список токенов для определния переводов строки. '''
+	with open(os.path.join(MARKUP_BUILDER_PARAMS["input_dir"], 
+		doc_name + ".txt.tokens"), "r", encoding="utf-8") as tokens_file:
+		return list(map(lambda x: x.replace("\n", ""), tokens_file.readlines()))
+
 def extract_doc_spans(doc_name, doc_token_ids, token_output):
-	document = markup_doc.MarkupDoc(os.path.join(get_work_dir(), doc_name), doc_name, True)
+	tokens_list = read_tokens_list(doc_name)
+	list_index = 0
 	result = {}
 	token_ids = sorted(doc_token_ids)
 	spans_start = {}
 	for (token_id, i) in zip(token_ids, range(len(token_ids))):
-		is_new_line = document.tokens[token_id].is_new_line
+		is_new_line = False
+		if list_index < len(tokens_list) and tokens_list[list_index] == "":
+			is_new_line = True
+			list_index += 1
+		list_index += 1
 		token_spans = set(token_output[token_id].spans.split("+"))
 		# Спан был в прошлом токене, но нет в текущем спане.
 		# Это значит очередной спан завершился.
@@ -126,12 +137,19 @@ def get_object_span_ids(class_name, spans):
 	return result
 
 def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, id_to_token):
+	tokens_list = read_tokens_list(doc_name)
+	list_index = 0
 	document = markup_doc.MarkupDoc(os.path.join(get_work_dir(), doc_name), doc_name, True)
 	result = []
 	objects_span_ids = {}
 	prev_token_id = -1
-	skip_prev_token = False
+	is_new_line_skipped = False
 	for token_id in doc_token_ids:
+		is_new_line = False
+		if list_index < len(tokens_list) and tokens_list[list_index] == "":
+			is_new_line = True
+			list_index += 1
+		list_index += 1
 		# Обработка случая org_descr "org_name"
 		# Мы не должны разрывать объект в этому случае, несмотря на то
 		# что на токене " не висит объект
@@ -139,18 +157,15 @@ def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, i
 		if id_to_token[token_id][2] == "\"" or id_to_token[token_id][2] == "'" or\
 		id_to_token[token_id][2] == "«" or id_to_token[token_id][2] == "<":
 			prev_token_id = token_id
-			skip_prev_token = True
+			is_new_line_skipped = is_new_line
 			continue
 		if id_to_token[token_id][2] == "." and prev_token_id != -1 and\
 		document.tokens[prev_token_id].length <= 2:
 			prev_token_id = token_id
-			skip_prev_token = True
+			is_new_line_skipped = is_new_line
 			continue
-		is_new_line = False
-		if document.tokens[token_id].is_new_line or\
-		(skip_prev_token and document.tokens[prev_token_id].is_new_line):
-			is_new_line = True
-		skip_prev_token = False
+		is_new_line = is_new_line or is_new_line_skipped
+		is_new_line_skipped = False
 		prev_token_id = token_id
 		token_objects = set(token_output[token_id].objects.split("+"))
 		# Объект был в прошлом токене, но нет в текущем спане.

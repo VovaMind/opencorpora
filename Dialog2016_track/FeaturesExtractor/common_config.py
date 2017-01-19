@@ -32,6 +32,8 @@ DOCUMENTS_CHUNK_SIZE = 100
 
 # Параметры для markup_builder.py
 MARKUP_BUILDER_PARAMS = {
+	# Папка с исходными текстами документов и их разбиением на токены
+	"input_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\!bocharov\tokenizedset",
 	# Папка в которой находятся признаки. В нее же пишем итоговую разметку.
 	"work_dir": r'C:\development\OpenCorpora\FactExtAutoAssesst\data\!test_output'
 }
