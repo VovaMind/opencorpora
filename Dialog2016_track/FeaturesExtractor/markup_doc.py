@@ -17,9 +17,6 @@ class TokenInfo(object):
 		self.determine_token_type()
 		self.obj_types = string_set.StringSet()
 		self.span_types = string_set.StringSet()
-		# Если после токена идет перевод строки, то выставляем тут True.
-		# Этот флаг используется для неразмеченного корпуса
-		self.is_new_line = False
 		
 	def determine_token_type(self):
 		'''Определяем тип токена. 
