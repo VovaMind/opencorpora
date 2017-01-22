@@ -60,3 +60,12 @@ GET_CONTEST_FORMAT_PARAMS = {
 	# Пишем результаты извлечения признаков для документов в эту папку
 	"work_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\!test_output",
 }
+
+# Парметры для get_span_keywords.py
+GET_SPAN_KEYWORDS = {
+	# Путь к размеченному корпусу.
+	"markup_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data"
+				r"\factRuEval-2016-master\factRuEval-2016-master\devset",
+	# Результирующий каталог, в котором лежат списки слов, разделенные по файлам.
+	"output_dir" : r"C:\development\OpenCorpora\FactExtAutoAssesst\data\word_sets"
+}
