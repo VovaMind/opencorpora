@@ -26,7 +26,9 @@ GET_CORPORA_FEATURES_PARAMS = {
 	# Он строится в процессе обработки размеченного корпуса.
         "sets_dump_file": OUTPUT_DIR + "sets_dump.bin",
 	# Количество частей на которые делим весь корпус для параллельного извлечения признаков
-	"parts_count": 10
+	"parts_count": 10,
+	# "output_dir" из GET_SPAN_KEYWORDS
+	"word_sets_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\word_sets"
 }
 
 # Признаки для токенов занимают много простанства на диске.
@@ -56,6 +58,8 @@ GET_TESTSET_FEATURES_PARAMS = {
 	# Сериализованный набор множеств для участников. 
 	# Он строится в процессе обработки размеченного корпуса.
 	"sets_dump_file": GET_CORPORA_FEATURES_PARAMS["sets_dump_file"]
+	# "output_dir" из GET_SPAN_KEYWORDS
+	"word_sets_dir": OUTPUT_DIR + "word_sets"
 }
 
 # Параметры для get_contest_format.py

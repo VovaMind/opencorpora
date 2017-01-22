@@ -6,6 +6,7 @@ from itertools import chain
 from markup_corpus import MarkupCorpus
 from pandas import DataFrame, options
 from participant_sets import ParticipantSets
+from word_sets import WordSets
 
 import bisect
 import json
@@ -20,6 +21,8 @@ class FeaturesExtractor(object):
 		self.is_cached = False
 	def load_w2v_data(self, binary_data_path):
 		self.w2v_model = word2vec.Word2Vec.load_word2vec_format(binary_data_path, binary=True)
+	def load_word_sets(self, input_dir):
+		self.word_sets = WordSets(input_dir)
 	def extract_w2v_features(self, mystem_result, token_text, token_type):
 		'''Извлекаем word2vec признаки для некотрого токена.'''
 		stub_result = [-1000] * WORD2VEC_FEATURES_COUNT
@@ -119,6 +122,8 @@ class FeaturesExtractor(object):
 			init_data['token_span_types'] = []
 		for i in range(WORD2VEC_FEATURES_COUNT):
 			init_data['word2vec_feature_' + str(i)] = []
+		for i in range(self.word_sets.sets_count()):
+			init_data['wordsets_feature_' + str(i)] = []
 		# Запускаем mystem для извлечения морфологических признаков.
 		# Также используем в word2vec.
 		mystem_result = FeaturesExtractor.run_mystem(doc_tokens)
@@ -145,6 +150,11 @@ class FeaturesExtractor(object):
 			assert len(w2v_features) == WORD2VEC_FEATURES_COUNT
 			for i in range(WORD2VEC_FEATURES_COUNT):
 				init_data['word2vec_feature_' + str(i)].append(w2v_features[i])
+			# Добавляем word_sets признаки
+			word_sets_features = self.word_sets.get_word_info(token.text)
+			assert len(word_sets_features) == self.word_sets.sets_count()
+			for i in range(self.word_sets.sets_count()):
+				init_data['wordsets_feature_' + str(i)].append(word_sets_features[i])
 		for participant in participant_outputs:
 			init_data[FeaturesExtractor.get_participant_col_name(participant.name)] = []
 			for i in range(len(doc_tokens)):

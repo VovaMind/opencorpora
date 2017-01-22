@@ -11,12 +11,13 @@ def extract_features():
 	'''Извлекаем признаки.'''
 	extractor = features_extractor.FeaturesExtractor()
 	extractor.load_w2v_data(GET_TESTSET_FEATURES_PARAMS["w2v_model_file"])
+	extractor.load_word_sets(GET_TESTSET_FEATURES_PARAMS["word_sets_dir"])
 	# Имя csv-файла, в который будет записан результат
 	output_collection = sets_collection.SetsCollection()
 	extractor.exract_markup_data_track1(GET_TESTSET_FEATURES_PARAMS["markup_dir"], 
 										GET_TESTSET_FEATURES_PARAMS["participants_dir"], 
 										GET_TESTSET_FEATURES_PARAMS["output_file_name"],
-										"testset", output_collection)
+										"test", output_collection)
 	output_collection.save(GET_TESTSET_FEATURES_PARAMS["sets_dump_file"])
 
 if __name__ == '__main__':
