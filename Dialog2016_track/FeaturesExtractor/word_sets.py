@@ -9,7 +9,7 @@ class WordSets(object):
 		all_files = sorted(os.listdir(input_dir))
 		for file_name in all_files:
 			with open(os.path.join(input_dir, file_name), "r", encoding = "utf-8") as input_file:
-				file_lines = set(map(lambda x: x.replace("\n", ""), input_file.readlines()))
+				file_lines = set(map(lambda x: x.replace("\n", "").lower(), input_file.readlines()))
 				self.word_sets.append(file_lines)
 	def sets_count(self):
 		return len(self.word_sets)
