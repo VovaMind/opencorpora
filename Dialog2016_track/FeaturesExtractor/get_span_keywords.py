@@ -6,6 +6,7 @@ from markup_corpus import MarkupCorpus
 
 import collections
 import os
+import re
 import time
 
 SPAN_TYPES = {"prj_descr", "org_descr", "geo_adj", "loc_descr", "job"}
@@ -18,6 +19,8 @@ def extract_features():
 			for span_type in token.span_types.objects:
 				if span_type not in span_types_collection:
 					span_types_collection[span_type] = collections.Counter()
+				if re.search(r"\w", token.text) is None:
+					continue
 				span_types_collection[span_type][token.text.lower()] += 1
 	if not os.path.exists(GET_SPAN_KEYWORDS["output_dir"]):
 		os.makedirs(GET_SPAN_KEYWORDS["output_dir"])

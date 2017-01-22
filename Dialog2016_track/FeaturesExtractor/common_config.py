@@ -57,7 +57,7 @@ GET_TESTSET_FEATURES_PARAMS = {
 	"output_file_name": OUTPUT_DIR + "MarkupData.csv",
 	# Сериализованный набор множеств для участников. 
 	# Он строится в процессе обработки размеченного корпуса.
-	"sets_dump_file": GET_CORPORA_FEATURES_PARAMS["sets_dump_file"]
+	"sets_dump_file": GET_CORPORA_FEATURES_PARAMS["sets_dump_file"],
 	# "output_dir" из GET_SPAN_KEYWORDS
 	"word_sets_dir": OUTPUT_DIR + "word_sets"
 }
