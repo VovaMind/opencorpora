@@ -22,7 +22,9 @@ GET_CORPORA_FEATURES_PARAMS = {
 	# Он строится в процессе обработки размеченного корпуса.
 	"sets_dump_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin",
 	# Количество частей на которые делим весь корпус для параллельного извлечения признаков
-	"parts_count": 10
+	"parts_count": 10,
+	# "output_dir" из GET_SPAN_KEYWORDS
+	"word_sets_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\word_sets"
 }
 
 # Признаки для токенов занимают много простанства на диске.
@@ -44,15 +46,17 @@ GET_TESTSET_FEATURES_PARAMS = {
 	"w2v_model_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\news_win20.model.bin",
 	# Путь к папке с разметкой testset'а.
 	"markup_dir": (r"C:\development\OpenCorpora\FactExtAutoAssesst\data"
-				r"\factRuEval-2016-master\factRuEval-2016-master\testset"),
+				r"\factRuEval-2016-master\factRuEval-2016-master\testset2"),
 	# Папка внутри которой содержится набор подпапок с именами участников. 
 	# Например, там должны быть подпапки "aquamarine_0", "pink_3.test", "violet_1.dev"
 	"participants_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\factrueval2016",
 	# Путь к результирующему csv-файлу с данными.
-	"output_file_name": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\MarkupData.csv",
+	"output_file_name": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\MarkupData2.csv",
 	# Сериализованный набор множеств для участников. 
 	# Он строится в процессе обработки размеченного корпуса.
-	"sets_dump_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin"
+	"sets_dump_file": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\sets_dump.bin",
+	# "output_dir" из GET_SPAN_KEYWORDS
+	"word_sets_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\word_sets"
 }
 
 # Параметры для get_contest_format.py
@@ -67,5 +71,5 @@ GET_SPAN_KEYWORDS = {
 	"markup_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data"
 				r"\factRuEval-2016-master\factRuEval-2016-master\devset",
 	# Результирующий каталог, в котором лежат списки слов, разделенные по файлам.
-	"output_dir" : r"C:\development\OpenCorpora\FactExtAutoAssesst\data\word_sets"
+	"output_dir": r"C:\development\OpenCorpora\FactExtAutoAssesst\data\word_sets"
 }

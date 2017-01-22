@@ -41,6 +41,7 @@ def extract_features():
 	corpus = full_corpus.FullCorpus(GET_CORPORA_FEATURES_PARAMS["input_dir"], part_id)
 	extractor = features_extractor.FeaturesExtractor()
 	extractor.load_w2v_data(GET_CORPORA_FEATURES_PARAMS["w2v_model_file"])
+	extractor.load_word_sets(GET_CORPORA_FEATURES_PARAMS["word_sets_dir"])
 	output_collection = sets_collection.SetsCollection()
 	output_collection.load(GET_CORPORA_FEATURES_PARAMS["sets_dump_file"])
 	while True:
