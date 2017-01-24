@@ -11,7 +11,14 @@ import time
 
 SPAN_TYPES = {"prj_descr", "org_descr", "geo_adj", "loc_descr", "job"}
 
+def read_stop_words():
+	''' Stop words source: http://www.ranks.nl/stopwords/russian '''
+	with open("stop_word_list.txt", "r", encoding="utf-8") as input_file:
+		return set(map(lambda x: x.replace("\n", "").lower(), input_file.readlines()))
+
+
 def extract_features():
+	stop_words = read_stop_words()
 	corpus = MarkupCorpus(GET_SPAN_KEYWORDS["markup_dir"])
 	span_types_collection = {}
 	for doc in corpus:
@@ -19,7 +26,7 @@ def extract_features():
 			for span_type in token.span_types.objects:
 				if span_type not in span_types_collection:
 					span_types_collection[span_type] = collections.Counter()
-				if re.search(r"\w", token.text) is None:
+				if re.search(r"\w", token.text) is None or token.text in stop_words:
 					continue
 				span_types_collection[span_type][token.text.lower()] += 1
 	if not os.path.exists(GET_SPAN_KEYWORDS["output_dir"]):
