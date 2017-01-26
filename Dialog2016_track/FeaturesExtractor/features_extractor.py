@@ -4,6 +4,7 @@ from common_config import BINARY_PATH, MYSTEM_FILE_NAME, WORD2VEC_FEATURES_COUNT
 from gensim.models import word2vec
 from itertools import chain
 from markup_corpus import MarkupCorpus
+from mystem_parser import MystemParser
 from pandas import DataFrame, options
 from participant_sets import ParticipantSets
 from word_sets import WordSets
@@ -19,6 +20,7 @@ class FeaturesExtractor(object):
 	def __init__(self):
 		# TODO: proper comment + name
 		self.is_cached = False
+		self.mystem_parser = MystemParser()
 	def load_w2v_data(self, binary_data_path):
 		self.w2v_model = word2vec.Word2Vec.load_word2vec_format(binary_data_path, binary=True)
 	def load_word_sets(self, input_dir):
@@ -81,7 +83,7 @@ class FeaturesExtractor(object):
 					if part_of_speech.find("=") != -1:
 						part_of_speech = part_of_speech[0:part_of_speech.find("=")]
 					result[text] = (mystem_result["analysis"][0]["lex"].lower() + "_" 
-						+ part_of_speech, mystem_info)
+						+ part_of_speech, mystem_info, analysis)
 		# remove files
 		os.remove(os.path.join(BINARY_PATH, input_fn))
 		os.remove(os.path.join(BINARY_PATH, output_fn))
@@ -124,6 +126,8 @@ class FeaturesExtractor(object):
 			init_data['word2vec_feature_' + str(i)] = []
 		for i in range(self.word_sets.sets_count()):
 			init_data['wordsets_feature_' + str(i)] = []
+		for i in self.mystem_parser.features_list:
+			init_data['grammar_' + str(i)] = []
 		# Запускаем mystem для извлечения морфологических признаков.
 		# Также используем в word2vec.
 		mystem_result = FeaturesExtractor.run_mystem(doc_tokens)
@@ -140,10 +144,15 @@ class FeaturesExtractor(object):
 			try:
 				init_data['mystem_info'].append(mystem_result[token.text][1])
 				init_data['part_of_speech'].append(mystem_result[token.text][0].split("_")[-1])
+				grammar_features = self.mystem_parser.parse(mystem_result[token.text][2])
+				for i in grammar_features:
+					init_data['grammar_' + (i)].append(grammar_features[i])
 			except:
 				# TODO: дублирование константы убрать
 				init_data['mystem_info'].append("mystem:none")
 				init_data['part_of_speech'].append("UNKNOWN")
+				for i in self.mystem_parser.features_list:
+					init_data['grammar_' + str(i)].append("undefined")
 			FeaturesExtractor.update_data(is_markup_data, init_data, output_collection)
 			# Добавляем w2v признаки
 			w2v_features = self.extract_w2v_features(mystem_result, token.text, token.type)
