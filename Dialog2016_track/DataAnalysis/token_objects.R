@@ -14,7 +14,7 @@ filteredData <- data[ , !(names(data) %in% drops)]
 
 n = nrow(filteredData)
 random_seed <- sample(0:9, n, replace=T)
-data$is_test <- random_seed >= 8
+data$is_test <- random_seed >= 10 
 
 rare_output <- subset(as.data.frame(table(data$token_objects, dnn = ('Value'))), Freq < 5)$Value
 is_rare_output = data$token_objects %in% rare_output

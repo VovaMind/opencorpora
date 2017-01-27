@@ -293,7 +293,9 @@ class FeaturesExtractor(object):
 		# Загружаем результаты участников для размеченного корпуса
 		if not self.is_cached:
 			self.sets = ParticipantSets(participants_dir)
-			self.dev_sets = self.sets.getTypedSets("") # TODO: filter improve
+			#self.dev_sets = self.sets.getTypedSets("") # TODO: filter improve
+			self.dev_sets = self.sets.getTypedSets("learnset") # TODO: filter improve
+			#self.dev_sets = self.sets.getTypedSets("ctrlset") # TODO: filter improve
 			# Загружаем объекты ParticipantOutput только один раз, 
 			# так как работа с файловой системой медленная
 			self.participant_outputs = []
