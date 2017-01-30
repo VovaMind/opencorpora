@@ -65,7 +65,7 @@ class FeaturesExtractor(object):
 				mystem_result = json.loads(line)
 				text = mystem_result["text"]
 				if not mystem_result["analysis"]:
-					result[text] = (mystem_result["text"] + "_S", "mystem:none")
+					result[text] = (mystem_result["text"] + "_S", "mystem:none", "")
 					continue
 				analysis = mystem_result["analysis"][0]["gr"]
 				parts = analysis.split(",")
