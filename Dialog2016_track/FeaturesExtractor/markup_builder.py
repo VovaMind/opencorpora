@@ -98,10 +98,9 @@ def extract_doc_spans(doc_name, doc_token_ids, token_output):
 		prev_token_spans = list(spans_start.keys())
 		for prev_token_span_raw in prev_token_spans:
 			prev_token_span, is_begin = parse_it(prev_token_span_raw)
+			should_split = prev_token_span not in token_spans or is_new_line
 			if DISTINGUISH_SPAN_BEGIN:
-				should_split = is_begin or is_new_line
-			else:
-				should_split = prev_token_span not in token_spans or is_new_line
+				should_split = is_begin or should_split
 			if should_split:
 				new_span = markup_doc.SpanInfo(type = prev_token_span, 
 											id = id_generator.IdGenerator.get(),
