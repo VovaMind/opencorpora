@@ -96,13 +96,15 @@ class FeaturesExtractor(object):
 			return 'Capital'
 		else:
 			return 'lower'
-	@staticmethod
-	def update_data(is_markup_data, init_data, output_collection):
+	def update_data(self, is_markup_data, init_data, output_collection):
 		data_prefix = "!corrected_data_"
 		if is_markup_data:
 			output_collection.add_set(data_prefix + "token_type", init_data['token_type'][-1])
 			output_collection.add_set(data_prefix + "mystem_info", init_data['mystem_info'][-1])
 			output_collection.add_set(data_prefix + "part_of_speech", init_data['part_of_speech'][-1])
+			for i in self.mystem_parser.features_list:
+				output_collection.add_set(data_prefix + 'grammar_' + str(i), 
+										init_data['grammar_' + str(i)][-1])
 		else:
 			if not output_collection.has_set(data_prefix + "token_type", init_data['token_type'][-1]):
 				init_data['token_type'][-1] = "Punctuator:Unknown"
@@ -110,6 +112,9 @@ class FeaturesExtractor(object):
 				init_data['mystem_info'][-1] = "mystem:none"
 			if not output_collection.has_set(data_prefix + "part_of_speech", init_data['part_of_speech'][-1]):
 				init_data['part_of_speech'][-1] = "UNKNOWN"
+			for i in self.mystem_parser.features_list:
+				if not output_collection.has_set(data_prefix + 'grammar_' + str(i), init_data['grammar_' + str(i)][-1]):
+					init_data['grammar_' + str(i)][-1] = "undefined"
 	def create_init_data_frame(self, doc_tokens, participant_outputs, is_markup_data, output_collection):
 		'''Создаем и инициализируем DataFrame. 
 		Строки - токены, столбцы - признаки
@@ -153,7 +158,7 @@ class FeaturesExtractor(object):
 				init_data['part_of_speech'].append("UNKNOWN")
 				for i in self.mystem_parser.features_list:
 					init_data['grammar_' + str(i)].append("undefined")
-			FeaturesExtractor.update_data(is_markup_data, init_data, output_collection)
+			self.update_data(is_markup_data, init_data, output_collection)
 			# Добавляем w2v признаки
 			w2v_features = self.extract_w2v_features(mystem_result, token.text, token.type)
 			assert len(w2v_features) == WORD2VEC_FEATURES_COUNT
