@@ -1,4 +1,6 @@
-﻿import bisect
+﻿from common_config import DISTINGUISH_SPAN_BEGIN, DISTINGUISH_OBJECT_BEGIN
+
+import bisect
 import os
 import re
 import string_set
@@ -170,6 +172,7 @@ class MarkupDoc(object):
 		token_ids = sorted(self.tokens.keys())
 		
 		for obj_id in self.objects:
+			is_first = True
 			for span_id in self.objects[obj_id].span_ids:
 				span = self.spans[span_id]
 				
@@ -179,7 +182,11 @@ class MarkupDoc(object):
 				
 				for i in range(0, span.token_length):
 					token_id = token_ids[token_id_pos + i]
-					self.tokens[token_id].obj_types.add_string(self.objects[obj_id].type)
+					prefix = ""
+					if DISTINGUISH_OBJECT_BEGIN and is_first:
+						prefix = "begin_"
+						is_first = False
+					self.tokens[token_id].obj_types.add_string(prefix + self.objects[obj_id].type)
 	def hang_span_types(self):
 		''' Навешиваем типы спанов на токены. '''
 		# TODO: дублирование кода извести
@@ -190,6 +197,7 @@ class MarkupDoc(object):
 		
 		for span_id in self.spans:
 			span = self.spans[span_id]
+			is_first = True
 			
 			# Из-за пропусков приходится делать бин поиск.
 			token_id_pos = bisect.bisect_left(token_ids, span.token_pos)
@@ -197,4 +205,8 @@ class MarkupDoc(object):
 			
 			for i in range(0, span.token_length):
 				token_id = token_ids[token_id_pos + i]
-				self.tokens[token_id].span_types.add_string(span.type)
+				prefix = ""
+				if DISTINGUISH_SPAN_BEGIN and is_first:
+					prefix = "begin_"
+					is_first = False
+				self.tokens[token_id].span_types.add_string(prefix + span.type)

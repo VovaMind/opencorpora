@@ -5,6 +5,9 @@ import os
 
 WORD2VEC_FEATURES_COUNT = 1000
 
+DISTINGUISH_SPAN_BEGIN = False
+DISTINGUISH_OBJECT_BEGIN = False
+
 WORK_DIR = "зызызы"
 
 # Путь к бинарникам (в нашем случае mystem)

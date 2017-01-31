@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ''' Механизм построения результирующей разметки. '''
 
-from common_config import MARKUP_BUILDER_PARAMS
+from common_config import MARKUP_BUILDER_PARAMS, DISTINGUISH_SPAN_BEGIN, DISTINGUISH_OBJECT_BEGIN
 from string_set import StringSet
 
 import id_generator
@@ -76,6 +76,12 @@ def read_tokens_list(doc_name):
 		doc_name + ".txt.tokens"), "r", encoding="utf-8") as tokens_file:
 		return list(map(lambda x: x.replace("\n", ""), tokens_file.readlines()))
 
+def parse_it(str):
+	''' TODO: comment? '''
+	if str.startswith("begin_"):
+		return str[6:], True
+	return str, False
+
 def extract_doc_spans(doc_name, doc_token_ids, token_output):
 	tokens_list = read_tokens_list(doc_name)
 	list_index = 0
@@ -89,11 +95,14 @@ def extract_doc_spans(doc_name, doc_token_ids, token_output):
 			list_index += 1
 		list_index += 1
 		token_spans = set(token_output[token_id].spans.split("+"))
-		# Спан был в прошлом токене, но нет в текущем спане.
-		# Это значит очередной спан завершился.
 		prev_token_spans = list(spans_start.keys())
-		for prev_token_span in prev_token_spans:
-			if prev_token_span not in token_spans or is_new_line:
+		for prev_token_span_raw in prev_token_spans:
+			prev_token_span, is_begin = parse_it(prev_token_span_raw)
+			if DISTINGUISH_SPAN_BEGIN:
+				should_split = is_begin or is_new_line
+			else:
+				should_split = prev_token_span not in token_spans or is_new_line
+			if should_split:
 				new_span = markup_doc.SpanInfo(type = prev_token_span, 
 											id = id_generator.IdGenerator.get(),
 											token_pos = token_ids[spans_start[prev_token_span]],
@@ -106,7 +115,8 @@ def extract_doc_spans(doc_name, doc_token_ids, token_output):
 				spans_start.pop(prev_token_span)
 		# Спан есть в текущем токене, но нет в предыдущем.
 		# Это означает начало очередного спана.
-		for current_token_span in token_spans:
+		for current_token_span_raw in token_spans:
+			current_token_span, is_begin = parse_it(current_token_span_raw)
 			if current_token_span == "NONE":
 				continue
 			if current_token_span not in spans_start:
@@ -171,8 +181,13 @@ def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, i
 		# Объект был в прошлом токене, но нет в текущем спане.
 		# Это значит очередной объект завершился.
 		prev_token_classes = list(objects_span_ids.keys())
-		for prev_token_class in prev_token_classes:
-			if prev_token_class not in token_objects or is_new_line:
+		for prev_token_class_raw in prev_token_classes:
+			prev_token_class, is_begin = parse_it(prev_token_class_raw)
+			if DISTINGUISH_OBJECT_BEGIN:
+				should_split = is_begin or is_new_line
+			else:
+				should_split = prev_token_class not in token_objects or is_new_line
+			if should_split:
 				new_object = markup_doc.ObjectInfo(id = id_generator.IdGenerator.get(),
 												type = prev_token_class,
 												span_ids = sorted(list(objects_span_ids[prev_token_class])))
@@ -183,7 +198,8 @@ def extract_doc_objects(doc_name, doc_token_ids, token_output, token_to_spans, i
 				objects_span_ids.pop(prev_token_class)
 		# Объект есть в текущем токене, но нет в предыдущем.
 		# Это означает начало очередного объекта.
-		for current_token_class in token_objects:
+		for current_token_class_raw in token_objects:
+			current_token_class, is_begin = parse_it(current_token_class_raw)
 			if current_token_class == "NONE":
 				continue
 			if current_token_class not in objects_span_ids:
