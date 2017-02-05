@@ -1,5 +1,4 @@
-library(class)
-library(randomForest)
+source("classifier.R")
 
 train_data <- read.csv('found_objects.csv')
 load("objects_model.bin")
@@ -22,14 +21,14 @@ for (i in 0:(OUTPUT_FILES_COUNT - 1)) {
 										levels = levels(train_data[,col_name]))
 			}
 		}
-        objects_result <- predict(objects_model, data)
-        data$found_objects <- objects_result
+		data$is_test <- rep(T, nrow(data))
+		objects_result <- classify(data, objects_model)
+		data$found_objects <- objects_result
 		if (is.factor(data$found_objects)) {
 			data$found_objects <- factor(as.character(data$found_objects), 
 										levels = levels(train_data$found_objects))
 		}
-        data$is_test <- rep(T, nrow(data))
-        spans_result <- predict(spans_model, data)
+        spans_result <- classify(data, spans_model)
         answer = data.frame(id = data$token_id, 
                             objects = as.character(objects_result),
                             spans = as.character(spans_result))

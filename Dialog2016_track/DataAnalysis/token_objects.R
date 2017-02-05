@@ -1,6 +1,4 @@
-library(class)
-library(randomForest)
-
+source("classifier.R")
 set.seed(281189)
 
 data <- read.csv('MarkupData.csv')
@@ -20,8 +18,8 @@ rare_output <- subset(as.data.frame(table(data$token_objects, dnn = ('Value'))),
 is_rare_output = data$token_objects %in% rare_output
 data[is_rare_output,]$is_test <- F
 
-boost_model <- randomForest(token_objects~., data=filteredData[!data$is_test,], mfinal=10)
-boost_result <- predict(boost_model, filteredData[data$is_test,])
+boost_model <- train_classifier(filteredData, T)
+boost_result <- classify(filteredData, boost_model)
 stats <- filteredData[data$is_test,]$token_objects == boost_result
 print(table(stats)) 
 print(table(filteredData[data$is_test,][!stats,]$token_objects))
