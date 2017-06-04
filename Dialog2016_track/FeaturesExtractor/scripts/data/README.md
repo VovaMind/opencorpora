@@ -1,0 +1,1 @@
+w2v bin file, stop_word_list.txt

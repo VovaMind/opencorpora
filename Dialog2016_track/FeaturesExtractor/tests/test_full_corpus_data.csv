@@ -1,0 +1,4 @@
+info#id,info#text,info#tokenization
+11,doc1.txt,doc1.tokens
+22,doc2.txt,doc2.tokens
+33,doc3.txt,doc3.tokens
