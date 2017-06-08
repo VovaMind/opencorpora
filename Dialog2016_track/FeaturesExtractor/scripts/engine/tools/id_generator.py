@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 
-class IdGenerator:
+class IdGenerator(object):
 	def __init__(self, start_id = 0):
 		self.current_id = start_id
 	def get(self):
