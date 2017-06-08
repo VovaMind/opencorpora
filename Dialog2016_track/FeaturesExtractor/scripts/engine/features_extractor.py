@@ -1,6 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
 
-from common_config import MYSTEM_FILE_NAME
 from gensim.models import word2vec
 from itertools import chain
 from markup_corpus import MarkupCorpus
