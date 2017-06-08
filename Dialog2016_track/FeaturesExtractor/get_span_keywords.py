@@ -2,7 +2,7 @@
 ''' main-файл для извлечения ключевых слов для спанов '''
 
 from common_config import GET_SPAN_KEYWORDS
-from markup_corpus import MarkupCorpus
+from engine.markup_corpus import MarkupCorpus
 
 import collections
 import os
@@ -13,7 +13,8 @@ SPAN_TYPES = {"prj_descr", "org_descr", "geo_adj", "loc_descr", "job"}
 
 def read_stop_words():
 	''' Stop words source: http://www.ranks.nl/stopwords/russian '''
-	with open("stop_word_list.txt", "r", encoding="utf-8") as input_file:
+	with open(os.path.join("data", os.path.join("engine", "data", "stop_word_list.txt")), "r", 
+		encoding="utf-8") as input_file:
 		return set(map(lambda x: x.replace("\n", "").lower(), input_file.readlines()))
 
 
@@ -21,7 +22,7 @@ def extract_features():
 	stop_words = read_stop_words()
 	corpus = MarkupCorpus(GET_SPAN_KEYWORDS["markup_dir"])
 	span_types_collection = {}
-	for doc in corpus:
+	for doc in corpus.load_documents():
 		for token in doc.tokens.values():
 			for span_type in token.span_types.objects:
 				if span_type not in span_types_collection:

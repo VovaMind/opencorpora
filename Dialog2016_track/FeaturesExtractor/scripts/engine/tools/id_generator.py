@@ -1,9 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 
 class IdGenerator:
-	''' Генерация последовательных id'ков. '''
-	current_id = 0
-	@staticmethod
-	def get():
-		IdGenerator.current_id += 1
-		return IdGenerator.current_id
+	def __init__(self, start_id = 0):
+		self.current_id = start_id
+	def get(self):
+		self.current_id += 1
+		return self.current_id

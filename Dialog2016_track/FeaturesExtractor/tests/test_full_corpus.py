@@ -5,11 +5,13 @@ import pytest
 from scripts.engine.documents_list import *
 from scripts.engine.full_corpus import *
 from scripts.engine.markup_doc import *
+from scripts.engine.tools.id_generator import *
 
 def test_correct_full_corpus():
+	IdGenerator.current_id = 0
 	base_dir = "test_full_corpus_data"
 	doc_list = DocumentsList(base_dir, "test_full_corpus_data.csv")
-	corpus = FullCorpus(doc_list, 2, 1, 0)
+	corpus = FullCorpus(doc_list, 2, 1, 0, IdGenerator())
 	expected_docs = [[11, 22], [33]]
 	expected_info = [
 		{

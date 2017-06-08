@@ -6,6 +6,8 @@ import os
 class WordSets(object):
 	def __init__(self, input_dir):
 		self.word_sets = []
+		if not input_dir:
+			return
 		all_files = sorted(os.listdir(input_dir))
 		for file_name in all_files:
 			with open(os.path.join(input_dir, file_name), "r", encoding = "utf-8") as input_file:

@@ -21,7 +21,7 @@ class SetsCollection(object):
 		input_set.load_from_string(value)
 		best_match = -1
 		best_set = string_set.StringSet()
-		for current_set_str in self.labeled_sets[label]:
+		for current_set_str in sorted(self.labeled_sets[label]):
 			current_set = string_set.StringSet()
 			current_set.load_from_string(current_set_str)
 			current_match = input_set.get_match(current_set)

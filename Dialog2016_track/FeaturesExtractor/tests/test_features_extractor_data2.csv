@@ -1,0 +1,4 @@
+info#id,info#text,info#tokenization,answer1#violet_0,answer1#red_22
+3,full_corpora/book3.txt,full_corpora/book3.tokens,violet_0_output/book3.txt,red_22_output/book3.txt
+4,full_corpora/book4.txt,full_corpora/book4.tokens,violet_0_output/book4.txt,red_22_output/book4.txt
+5,full_corpora/book5.txt,full_corpora/book5.tokens,violet_0_output/book5.txt,red_22_output/book5.txt
