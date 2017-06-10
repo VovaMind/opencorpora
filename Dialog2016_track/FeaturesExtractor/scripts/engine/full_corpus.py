@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from markup_doc import TokenInfo
-from common_config import DOCUMENTS_CHUNK_SIZE, GET_CORPORA_FEATURES_PARAMS
 
 import markup_doc
 import os

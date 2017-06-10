@@ -1,6 +1,4 @@
-﻿from common_config import DISTINGUISH_SPAN_BEGIN, DISTINGUISH_OBJECT_BEGIN
-
-import bisect
+﻿import bisect
 import os
 import re
 import tools.string_set
@@ -83,15 +81,15 @@ class ObjectInfo(object):
 
 class MarkupDoc(object):
 	'''Размеченный документ'''
-	def __init__(self, doc_info, tokens_only):
+	def __init__(self, doc_info, tokens_only, distinguish_span_begin, distinguish_object_begin):
 		self.document_id = doc_info["info#id"]
 		self.extract_tokens(doc_info["info#contest_tokenization"])
 		if tokens_only:
 			return 
 		self.extract_spans(doc_info["info#spans"])
 		self.extract_objects(doc_info["info#objects"])
-		self.hang_objects()
-		self.hang_span_types()
+		self.hang_objects(distinguish_object_begin)
+		self.hang_span_types(distinguish_span_begin)
 	def extract_tokens(self, file_name):
 		'''Извлечение токенов.'''
 		self.tokens = {}
@@ -149,7 +147,7 @@ class MarkupDoc(object):
 				obj_id = int(parts[0])
 				self.objects[obj_id] = ObjectInfo(id = obj_id, type = parts[1], span_ids = span_ids)
 	
-	def hang_objects(self):
+	def hang_objects(self, distinguish_object_begin):
 		'''Навешиваем объекты на токены.'''
 		# Id токенов идут с пропусками. 
 		# Например, "301823, 301826, 301827" (devset\book_317).
@@ -168,11 +166,11 @@ class MarkupDoc(object):
 				for i in range(0, span.token_length):
 					token_id = token_ids[token_id_pos + i]
 					prefix = ""
-					if DISTINGUISH_OBJECT_BEGIN and is_first:
+					if distinguish_object_begin:
 						prefix = "begin_"
 						is_first = False
 					self.tokens[token_id].obj_types.add_string(prefix + self.objects[obj_id].type)
-	def hang_span_types(self):
+	def hang_span_types(self, distinguish_span_begin):
 		''' Навешиваем типы спанов на токены. '''
 		# TODO: дублирование кода извести
 		# Id токенов идут с пропусками. 
@@ -191,7 +189,7 @@ class MarkupDoc(object):
 			for i in range(0, span.token_length):
 				token_id = token_ids[token_id_pos + i]
 				prefix = ""
-				if DISTINGUISH_SPAN_BEGIN and is_first:
+				if distinguish_span_begin and is_first:
 					prefix = "begin_"
 					is_first = False
 				self.tokens[token_id].span_types.add_string(prefix + span.type)

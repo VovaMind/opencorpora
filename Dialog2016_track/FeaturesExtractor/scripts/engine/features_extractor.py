@@ -264,6 +264,7 @@ class FeaturesExtractor(object):
 			if participant.has_output(doc_id):
 				found_objects = participant.get_track_output(doc_id = doc_id, 
 					track_id = 1).found_objects
+				# TODO: Тут нужна поддержка начала/середины объекта
 				for obj in found_objects:
 					token_id = bisect.bisect_left(tokens_start_pos, obj.pos)
 					while (
