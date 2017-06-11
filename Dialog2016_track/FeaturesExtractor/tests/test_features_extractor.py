@@ -23,7 +23,6 @@ def expect_equal_collections(expected, actual):
 		assert expected.labeled_sets[key] == actual.labeled_sets[key]
 
 def test_markup_data_extractor():
-	print("test_markup_data_extractor()")
 	base_dir = "test_features_extractor_data"
 	markup_doc_list = DocumentsList(base_dir, "test_features_extractor_data.csv")
 	extractror = create_features_extraxtor(base_dir)
@@ -41,7 +40,6 @@ def test_markup_data_extractor():
 	os.remove(output_file)
 
 def test_full_corpora_extractor():
-	print("test_full_corpora_extractor()")
 	base_dir = "test_features_extractor_data"
 	corpora_doc_list = DocumentsList(base_dir, "test_features_extractor_data2.csv")
 	corpora_doc_list2 = DocumentsList(base_dir, "test_features_extractor_data2.csv")

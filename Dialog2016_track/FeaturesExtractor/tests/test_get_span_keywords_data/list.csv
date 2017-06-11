@@ -1,0 +1,3 @@
+info#id,info#text,info#contest_tokenization,info#spans,info#objects
+1,corpus/book1.txt,corpus/book1.tokens,corpus/book1.spans,corpus/book1.objects
+2,corpus/book2.txt,corpus/book2.tokens,corpus/book2.spans,corpus/book2.objects
