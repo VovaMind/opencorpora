@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from helpers import expect_equal_collections
 from os.path import join
 from scripts.engine.documents_list import *
 from scripts.engine.features_extractor import *
@@ -16,11 +17,6 @@ def create_features_extraxtor(base_dir):
 	extractror.load_word_sets(join(base_dir, "word_sets"))
 	extractror.set_mystem_file_name("mystem.exe")
 	return extractror
-
-def expect_equal_collections(expected, actual):
-	assert len(expected.labeled_sets) == len(actual.labeled_sets)
-	for key in expected.labeled_sets:
-		assert expected.labeled_sets[key] == actual.labeled_sets[key]
 
 def test_markup_data_extractor():
 	base_dir = "test_features_extractor_data"

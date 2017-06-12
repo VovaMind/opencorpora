@@ -7,8 +7,8 @@ import shutil
 
 def test_correct_get_span_keywords():
 	config = Config("test_get_span_keywords_config.json")
-	if isdir(config.get("output_dir")):
-		shutil.rmtree(config.get("output_dir"))
+	if isdir(config.get("words_set_dir")):
+		shutil.rmtree(config.get("words_set_dir"))
 	
 	args = []
 	args.append("python")
@@ -16,7 +16,7 @@ def test_correct_get_span_keywords():
 	args.append(join("..", "tests", "test_get_span_keywords_config.json"))
 	call_script(args)
 	
-	assert {"ab"} == set(read_file_lines(join(config.get("output_dir"), "words_loc_descr.txt")))
-	assert {"hj"} == set(read_file_lines(join(config.get("output_dir"), "words_org_descr.txt")))
+	assert {"ab"} == set(read_file_lines(join(config.get("words_set_dir"), "words_loc_descr.txt")))
+	assert {"hj"} == set(read_file_lines(join(config.get("words_set_dir"), "words_org_descr.txt")))
 	
-	shutil.rmtree(config.get("output_dir"))
+	shutil.rmtree(config.get("words_set_dir"))
