@@ -32,10 +32,10 @@ def test_correct_get_testset_features():
 	args.append(join("..", "tests", config_file_name))
 	call_script(args)
 	
-	assert filecmp.cmp(join(config.get("base_dir"), "expected_features.csv"),
+	assert filecmp.cmp(join(config.get("testset_base_dir"), "expected_features.csv"),
 		config.get("testset_features_file"))
 	# Нельзя просто сравнивать два файла, так как иногда в выдаче меняется порядок
-	expected_output_collection = read_collection(join(config.get("base_dir"), 
+	expected_output_collection = read_collection(join(config.get("testset_base_dir"), 
 		"expected_sets.dump"))
 	output_collection = read_collection(config.get("sets_collection_file"))
 	expect_equal_collections(expected_output_collection, output_collection)

@@ -1,5 +1,5 @@
 {
-	"base_dir": "test_get_span_keywords_data",
-	"documents_list": "test_get_span_keywords_data/list.csv",
+	"devset_base_dir": "test_get_span_keywords_data",
+	"devset_documents_list": "test_get_span_keywords_data/list.csv",
 	"words_set_dir": "test_get_span_keywords_data/output"
 }

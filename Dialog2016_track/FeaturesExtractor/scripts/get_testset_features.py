@@ -13,7 +13,8 @@ import time
 
 def extract_features():
 	config = Config(sys.argv[1])
-	documents_list = DocumentsList(config.get("base_dir"), config.get("documents_list"))
+	documents_list = DocumentsList(config.get("testset_base_dir"),
+		config.get("testset_documents_list"))
 	corpus = MarkupCorpus(documents_list)
 	
 	extractor = FeaturesExtractor()

@@ -26,7 +26,8 @@ def read_stop_words():
 def extract_features():
 	config = Config(sys.argv[1])
 	stop_words = read_stop_words()
-	document_list = DocumentsList(config.get("base_dir"), config.get("documents_list"))
+	document_list = DocumentsList(config.get("devset_base_dir"),
+		config.get("devset_documents_list"))
 	corpus = MarkupCorpus(document_list)
 	
 	span_types_collection = {}
@@ -39,8 +40,8 @@ def extract_features():
 					continue
 				span_types_collection[span_type][token.text.lower()] += 1
 	
-	if not os.path.exists(config.get("output_dir")):
-		os.makedirs(config.get("output_dir"))
+	if not os.path.exists(config.get("words_set_dir")):
+		os.makedirs(config.get("words_set_dir"))
 	for span_type in span_types_collection:
 		if span_type not in SPAN_TYPES:
 			continue
@@ -48,7 +49,7 @@ def extract_features():
 			span_types_collection[span_type]))
 		if not words:
 			continue
-		with open(os.path.join(config.get("output_dir"), "words_" + span_type + ".txt"), "w",
+		with open(os.path.join(config.get("words_set_dir"), "words_" + span_type + ".txt"), "w",
 				encoding = "utf-8" ) as output_file:
 			for word in sorted(words):
 				print(word, file=output_file)

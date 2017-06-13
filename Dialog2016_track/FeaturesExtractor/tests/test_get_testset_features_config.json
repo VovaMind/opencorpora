@@ -1,6 +1,6 @@
 {
-	"base_dir": "test_get_testset_features_data",
-	"documents_list": "test_get_testset_features_data/list.csv",
+	"testset_base_dir": "test_get_testset_features_data",
+	"testset_documents_list": "test_get_testset_features_data/list.csv",
 	"w2v_file_name": "news_win20.model.bin",
 	"mystem_file_name": "mystem.exe",
 	"testset_features_file": "test_get_testset_features_data/features.csv",
