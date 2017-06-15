@@ -101,7 +101,6 @@ def extract_features():
 		corpus.clear_documents_cache()
 
 if __name__ == '__main__':
-	print(123)
 	begin_time = time.time()
 	extract_features()
 	end_time = time.time()
