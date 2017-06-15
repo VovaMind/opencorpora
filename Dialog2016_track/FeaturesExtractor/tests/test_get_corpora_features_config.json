@@ -1,0 +1,11 @@
+{
+	"corpora_base_dir": "test_get_corpora_features_data",
+	"corpora_documents_list": "test_get_corpora_features_data/list.csv",
+	"corpora_chunk_size": 1,
+	"corpora_parts_count": 2,
+	"w2v_file_name": "news_win20.model.bin",
+	"words_set_dir": "test_get_corpora_features_data/word_sets",
+	"mystem_file_name": "mystem.exe",
+	"sets_collection_file": "test_get_corpora_features_data/sets.dump",
+	"output_dir": "test_get_corpora_features_data/result"
+}
