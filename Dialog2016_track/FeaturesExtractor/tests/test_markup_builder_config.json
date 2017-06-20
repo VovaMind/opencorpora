@@ -1,0 +1,5 @@
+{
+	"output_dir": "test_markup_builder_data/output",
+	"corpora_base_dir": "test_markup_builder_data",
+	"corpora_documents_list": "test_markup_builder_data/list.csv"
+}

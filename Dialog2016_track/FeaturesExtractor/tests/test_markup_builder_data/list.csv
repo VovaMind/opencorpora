@@ -1,0 +1,4 @@
+info#id,info#text,info#tokenization
+33,full_corpora/book3.txt,full_corpora/book3.tokens
+44,full_corpora/book4.txt,full_corpora/book4.tokens
+55,full_corpora/book5.txt,full_corpora/book5.tokens
