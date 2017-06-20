@@ -258,7 +258,8 @@ class Builder(object):
 		all_spans.sort(key = lambda x: x.id)
 		span_texts = {}
 		# Выводим спаны
-		with open(os.path.join(self.get_work_dir(), str(doc_id) + ".spans"), "w") as span_file:
+		with open(os.path.join(self.get_work_dir(), str(doc_id) + ".spans"), "w",
+				encoding="utf-8") as span_file:
 			for span in all_spans:
 				debug_text = ""
 				for i in range(span.token_pos, span.token_pos + span.token_length):
@@ -289,7 +290,8 @@ class Builder(object):
 						span_file.write("?")
 				span_file.write("\n")
 		# Выводим объекты
-		with open(os.path.join(self.get_work_dir(), str(doc_id) + ".objects"), "w") as object_file:
+		with open(os.path.join(self.get_work_dir(), str(doc_id) + ".objects"), "w",
+				encoding="utf-8") as object_file:
 			for obj in doc_objects:
 				object_file.write(str(obj.id) + " ")
 				object_file.write(str(obj.type))
