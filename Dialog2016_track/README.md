@@ -17,7 +17,7 @@
 Настройка перед запуском:
 1. Для извлечения признаков используется Python 3.4. Нужно установить пакеты: gensim, pandas, pytest.
 2. Для построения моделей и ответов используется R. Нужно установить пакеты: class, randomForest, adabag.
-3. Перед запуском нужно скачать [w2v модель](http://rusvectores.org/static/models/rusvectores2/news_rusvectores2.bin.gz) (скопировать в FeaturesExtractor/scripts/data) и [mystem](https://tech.yandex.ru/mystem/) (скопировать в FeaturesExtractor/scripts/bin).
+3. Перед запуском нужно скачать [w2v модель](http://rusvectores.org/static/models/rusvectores2/news_rusvectores2.bin.gz) (скопировать в FeaturesExtractor/scripts/engine/data) и [mystem](https://tech.yandex.ru/mystem/) (скопировать в FeaturesExtractor/scripts/engine/bin).
 4. Нужно проверить, что тесты проходят. Для этого нужно перейти в FeaturesExtractor/test и запустить "python -m pytest". Должно пройти 16 тестов. 
 
 ВАЖНО! В тестах предполагается, что w2v файл называется "news_win20.model.bin", а испольняемый файл для mystem называется "mystem.exe". В случае необходимости нужно заменить эти названия в тестах (py-файлы) и в конфигах (json-файлы).
@@ -41,8 +41,8 @@ python FeaturesExtractor/scripts/get_testset_features.py config_file
 ```
 * Построение модели. Запуск:
 ```bash
-Rscript  DataAnalysis/token_objects.R
-Rscript  DataAnalysis/token_span_types.R
+Rscript DataAnalysis/token_objects.R
+Rscript DataAnalysis/token_span_types.R
 ```
 * Извлечение признаков из всего корпуса. Запуск:
 ```bash
