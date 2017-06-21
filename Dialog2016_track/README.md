@@ -24,20 +24,20 @@
 
 # Основной pipeline для получения разметки:
 
-1. Подготвка словарей по devset. Мы извлекаем частотные слова для определенного типа спанов. Запуск:
+* Подготвка словарей по devset. Мы извлекаем частотные слова для определенного типа спанов. Запуск:
 ```bash
 python FeaturesExtractor/scripts/get_span_keywords.py config_file
 ```
 Это нужно проделать только один раз. Важно извлекать данные из devset'а, чтобы избежать перееобучения на testset'е. Остальные газетиры нужно складывать в ту же директорию (words_set_dir в конфиге).
-2. Выбираем набор признаков. Делаем его в FeaturesExtractor/features_extractor.py. Или можно использовать текущий набор признаков.
-3. Построение моделей:
+* Выбираем набор признаков. Делаем его в FeaturesExtractor/features_extractor.py. Или можно использовать текущий набор признаков.
+* Построение моделей:
   1. Извлекаем признаки из рамеченного корпуса testset с помощью FeaturesExtractor/get_testset_features.py. (devset не подходит, так как участники его видели)
   2. Запускаем DataAnalysis/token_objects.R и потом DataAnalysis/token_span_types.R.
-4. Извлечение признаков из всего корпуса: FeaturesExtractor/get_corpora_features.py.
+* Извлечение признаков из всего корпуса: FeaturesExtractor/get_corpora_features.py.
 Для эффективности делаем извлечение признаков параллельно. Для этого нужно задать "parts_count" в common_config'е.
 Также требуется запускать get_corpora_features с одним параметром - номер части (от 0 до parts_count - 1).
-5. Получаем объекты и спаны для всего корпуса: DataAnalysis/restore_full_corpus.R. 
+* Получаем объекты и спаны для всего корпуса: DataAnalysis/restore_full_corpus.R. 
 Его нужно запускать как Rscript restore_full_corpus.R input_dir, где input_dir - каталог с извлеченными признаками.
 Предполагается параллельный запуск скрипта для каждой из частей.
-6. Получаем итоговую разметку: FeaturesExtractor/markup_builder.py.
+* Получаем итоговую разметку: FeaturesExtractor/markup_builder.py.
 Также нужно запускать с параметром от 0 до parts_count - 1 для построения результата для конкретной части.
