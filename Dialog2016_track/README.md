@@ -34,20 +34,20 @@ TBD
 
 Имя в конфиге | Описание
 --- | ---
-devset_documents_list | TBD
-devset_base_dir | TBD
-words_set_dir | TBD
-testset_documents_list | TBD
-testset_base_dir | TBD
-w2v_file_name | TBD
-mystem_file_name | TBD
-testset_features_file | TBD
-sets_collection_file | TBD
-corpora_documents_list | TBD
-corpora_base_dir | TBD
-corpora_chunk_size | TBD
-corpora_parts_count | TBD
-output_dir | TBD
+devset_documents_list | Путь к csv-файлу, который описывает файлы devset'а.
+devset_base_dir | Базовая директория для путей к файлам из devset_documents_list.
+words_set_dir | Каталог в котором лежат газетиры. Каждый газетир - это файл со списком слов. Мы извлекаем для каждого слова и каждого газетира бинарный признак принадлежности слова газетиру.
+testset_documents_list | Путь к csv-файлу, который описывает файлы testset'а.
+testset_base_dir | Базовая директория для путей к файлам из testset_documents_list.
+w2v_file_name | Имя файла с w2v моделью.
+mystem_file_name | Имя исполняемого файла для mystem.
+testset_features_file | Путь к csv-файлу с признаками для testset'а. Этот файл нужно для построения модели.
+sets_collection_file | Путь к промежуточному файлу. Нам Нужен
+corpora_documents_list | Путь к csv-файлу, который описывает большой неразмеченный корпус.
+corpora_base_dir | Базовая директория для путей к файлам из corpora_documents_list.
+corpora_chunk_size | Сколько документов класть в один csv-файл. По-умолчанию 100.
+corpora_parts_count | На сколько частей разбиваем корпус для параллельных вычислений. По-умолчанию 10.
+output_dir | Директория в которую складываем все промежуточные результаты и ответы.
 
 Больше деталей можно узнать по коду в FeaturesExtractor/tests и в FeaturesExtractor/scripts.
 
