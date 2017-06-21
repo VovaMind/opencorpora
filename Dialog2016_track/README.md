@@ -24,9 +24,32 @@
 
 # Основной pipeline для получения разметки:
 
+## Списки документов
+
+TBD
+
 ## Конфиги
 
-Каждый запуск python-скрипта
+Каждый запуск python-скрипта предполагает задание json-конфига. Конфиги используют следующие имена:
+
+Имя в конфиге | Описание
+--- | ---
+devset_documents_list | TBD
+devset_base_dir | TBD
+words_set_dir | TBD
+testset_documents_list | TBD
+testset_base_dir | TBD
+w2v_file_name | TBD
+mystem_file_name | TBD
+testset_features_file | TBD
+sets_collection_file | TBD
+corpora_documents_list | TBD
+corpora_base_dir | TBD
+corpora_chunk_size | TBD
+corpora_parts_count | TBD
+output_dir | TBD
+
+Больше деталей можно узнать по коду в FeaturesExtractor/tests и в FeaturesExtractor/scripts.
 
 ## Схема запуска
 
