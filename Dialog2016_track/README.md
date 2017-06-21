@@ -56,7 +56,7 @@ testset_base_dir | Базовая директория для путей к фа
 w2v_file_name | Имя файла с w2v моделью.
 mystem_file_name | Имя исполняемого файла для mystem.
 testset_features_file | Путь к csv-файлу с признаками для testset'а. Этот файл нужно для построения модели.
-sets_collection_file | Путь к промежуточному файлу. Нам Нужен
+sets_collection_file | Путь к промежуточному файлу. Он создается скриптом get\_testset\_features.py и используется скриптом get\_corpora\_features.py.
 corpora_documents_list | Путь к csv-файлу, который описывает большой неразмеченный корпус.
 corpora_base_dir | Базовая директория для путей к файлам из corpora_documents_list.
 corpora_chunk_size | Сколько документов класть в один csv-файл. По-умолчанию 100.
