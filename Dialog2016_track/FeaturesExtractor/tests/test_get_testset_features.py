@@ -27,7 +27,7 @@ def test_correct_get_testset_features():
 	cleanup(config)
 	
 	args = []
-	args.append("python")
+	args.append("python3")
 	args.append(join("..", "scripts", "get_testset_features.py"))
 	args.append(join("..", "tests", config_file_name))
 	call_script(args)

@@ -11,7 +11,7 @@ def test_correct_get_span_keywords():
 		shutil.rmtree(config.get("words_set_dir"))
 	
 	args = []
-	args.append("python")
+	args.append("python3")
 	args.append(join("..", "scripts", "get_span_keywords.py"))
 	args.append(join("..", "tests", "test_get_span_keywords_config.json"))
 	call_script(args)

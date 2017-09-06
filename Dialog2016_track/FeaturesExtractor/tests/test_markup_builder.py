@@ -26,7 +26,7 @@ def test_correct_markup_building():
 	cleanup(output_dir)
 	
 	args = []
-	args.append("python")
+	args.append("python3")
 	args.append(join("..", "scripts", "markup_builder.py"))
 	args.append(join("..", "tests", config_file_name))
 	args.append(part_id)

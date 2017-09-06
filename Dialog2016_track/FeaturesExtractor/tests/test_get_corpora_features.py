@@ -18,7 +18,7 @@ def test_correct_get_corpora_features():
 	cleanup(config)
 	
 	args = []
-	args.append("python")
+	args.append("python3")
 	args.append(join("..", "scripts", "get_corpora_features.py"))
 	args.append(join("..", "tests", config_file_name))
 	args.append(part_id)
