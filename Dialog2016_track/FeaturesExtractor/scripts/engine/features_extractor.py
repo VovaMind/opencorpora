@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 
-from gensim.models import word2vec
+from gensim.models.keyedvectors import KeyedVectors
 from itertools import chain
 from markup_corpus import MarkupCorpus
 from pandas import DataFrame, options
@@ -27,7 +27,7 @@ class FeaturesExtractor(object):
 		self.is_cached = False
 		self.mystem_parser = MystemParser()
 	def load_w2v_data(self, binary_file_name):
-		self.w2v_model = word2vec.Word2Vec.load_word2vec_format(
+		self.w2v_model = KeyedVectors.load_word2vec_format(
 			os.path.join(DATA_PATH, binary_file_name), binary=True)
 	def load_word_sets(self, input_dir):
 		self.word_sets = WordSets(input_dir)
