@@ -15,7 +15,7 @@
 # Настройка
 
 Настройка перед запуском:
-1. Для извлечения признаков используется Python 3.4. Нужно установить пакеты: gensim, pandas, pytest.
+1. Для извлечения признаков используется Python 3.6. Нужно установить пакеты: gensim, pandas, pytest.
 2. Для построения моделей и ответов используется R. Нужно установить пакеты: class, randomForest, adabag.
 3. Перед запуском нужно скачать [w2v модель](http://rusvectores.org/static/models/rusvectores2/news_rusvectores2.bin.gz) (скопировать в FeaturesExtractor/scripts/engine/data) и [mystem](https://tech.yandex.ru/mystem/) (скопировать в FeaturesExtractor/scripts/engine/bin).
 4. Нужно проверить, что тесты проходят. Для этого нужно перейти в FeaturesExtractor/test и запустить "python -m pytest". Должно пройти 16 тестов. 
